@@ -8,7 +8,7 @@ var app = require('express')();
 var messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
 var constants = require("./classes/constantes");
-var url = 'https://eu11.chat-api.com/instance20204/sendMessage?token=linoijx5h4glyl4b';
+var url = 'https://eu24.chat-api.com/instance23630/sendMessage?token=fhbjhwk1fvtfy2j4';
 var urlFile = 'https://eu11.chat-api.com/instance20204/sendFile?token=linoijx5h4glyl4b';
 var pdfFileUrl = 'https://botfacebookredinson.herokuapp.com/saludo';
 var objeto;
