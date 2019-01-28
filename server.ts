@@ -147,12 +147,19 @@ function subFlow() {
             }
 
         } else if (user.state == 'darUbicacion') {
-            
+
             if (input.match(/^(\-?\d+(\.\d+)?).\s*(\-?\d+(\.\d+)?)$/g)) {
                 documentNumber = parseInt(input);
                 message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
                 user.state = 'darCategoria';
+                user.body = message;
+                sendMessage(user, (x: any) => { });
+            } else {
+
+                message = messagesTosendRiesgo.newMessage('ubicacionValida', senderName);
+                user = users.find(userValue => userValue.chatId == chatId);
+                user.state = 'darUbicacion';
                 user.body = message;
                 sendMessage(user, (x: any) => { });
             }

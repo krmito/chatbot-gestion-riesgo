@@ -138,6 +138,13 @@ function subFlow() {
                 user.body = message;
                 sendMessage(user, function (x) { });
             }
+            else {
+                message = messagesTosendRiesgo.newMessage('ubicacionValida', senderName);
+                user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                user.state = 'darUbicacion';
+                user.body = message;
+                sendMessage(user, function (x) { });
+            }
         }
         else if (user.state == 'darCategoria') {
             existeAfiliado = false;

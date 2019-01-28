@@ -39,8 +39,11 @@ let messageTosendRiesgo = {
             case 'repetir':
                 mensaje = ` ${userName} deseas hacer algúna otra operación? (si / no)`;
                 break;
-                case 'imagenValida':
+            case 'imagenValida':
                 mensaje = ` ${userName}, ingresa una imagen válida`;
+                break;
+            case 'ubicacionValida':
+                mensaje = ` ${userName}, ingresa una ubicación válida`;
                 break;
         }
         return mensaje;

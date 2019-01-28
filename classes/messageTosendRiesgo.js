@@ -27,6 +27,9 @@ var messageTosendRiesgo = {
             case 'imagenValida':
                 mensaje = " " + userName + ", ingresa una imagen v\u00E1lida";
                 break;
+            case 'ubicacionValida':
+                mensaje = " " + userName + ", ingresa una ubicaci\u00F3n v\u00E1lida";
+                break;
         }
         return mensaje;
     }
