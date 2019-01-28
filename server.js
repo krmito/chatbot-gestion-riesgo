@@ -130,12 +130,14 @@ function subFlow() {
             }
         }
         else if (user.state == 'darUbicacion') {
-            documentNumber = parseInt(input);
-            message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
-            user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.state = 'darCategoria';
-            user.body = message;
-            sendMessage(user, function (x) { });
+            if (input.match(/^(\-?\d+(\.\d+)?).\s*(\-?\d+(\.\d+)?)$/g)) {
+                documentNumber = parseInt(input);
+                message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
+                user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                user.state = 'darCategoria';
+                user.body = message;
+                sendMessage(user, function (x) { });
+            }
         }
         else if (user.state == 'darCategoria') {
             existeAfiliado = false;
