@@ -1,347 +1,297 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
 var bodyParser = require("body-parser");
 var request = require("request");
 var User_1 = require("./classes/User");
-var messagesTosendRiesgo = require("./classes/messageTosendRiesgo");
+var consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
+var app = require('express')();
+var FileReader = require('filereader');
+var File = require("file-class");
+var messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
-var app = express();
-var url = 'https://eu24.chat-api.com/instance23630/sendMessage?token=fhbjhwk1fvtfy2j4';
-var users = [];
-var user;
-var data;
+var constants = require("./classes/constants");
+var url = 'https://eu11.chat-api.com/instance20204/sendMessage?token=linoijx5h4glyl4b';
+var urlFile = 'https://eu11.chat-api.com/instance20204/sendFile?token=linoijx5h4glyl4b';
+var pdfFileUrl = 'https://botfacebookredinson.herokuapp.com/saludo';
+var objeto;
+var pdf;
+var siga = false;
+/* let phone: string;
+let message: string;
+let userName: string; */
+//let user: User;
+var users = new Map();
+var phones = new Set();
+/* let messageToSend: string; */
 var documentNumber;
-var documentDate;
-var day;
-var hour;
-var message;
-var saludosInicial = [];
-var reporteRiesgo = [];
-var consultaRiesgo = [];
-var tipoDocumento = [];
-var DiasDisponibles = [];
-var diasDisponibles = [];
-var input = "";
-var senderName;
 var datos;
-var chatId;
-var fromMe;
-var elementUser;
-var indexUser;
-var fechaActual = new Date();
-var dia = fechaActual.getDate();
-var mes = fechaActual.getMonth();
-var anio = fechaActual.getFullYear();
-var mesString;
 var correo;
 var existeAfiliado;
-var horasDisponibles = [];
-var categoriasRiesgo = [];
-var arregloDias = [];
 var myArray = [];
-var repetir = [];
-var NoRepetir = [];
 app.use(bodyParser.json());
+// Handle POST request
 app.post('/my_webhook_url', function (req, res) {
-    data = req.body; // New messages in the "body" variable
-    console.log('ELEMENT', data);
-    //servicioAfiliadoEPS.armaObjetos("CC", "1107063182")
-    utilities.functionWithCallBack(checkMessage(), 1000).then(function (res) {
-        console.log('res--------------------------------->', res);
-        subFlow();
-    });
-    res.sendStatus(200); //Response does not matter
-});
-function checkMessage() {
-    reporteRiesgo = [["r", "riesgo"]];
-    consultaRiesgo = [["c", "consulta"]];
-    saludosInicial = ["hola", "ola", "buena tarde", "buen dia", "buena noche", "qhubo"];
-    tipoDocumento = [["1", "cédula de ciudadanía"], ["2", "pasaporte"], ["3", "tarjeta de identidad"], ["4", "cancelar"]];
-    horasDisponibles = ["8:00", "9:00", "3:30", "4:20", "cancelar"];
-    categoriasRiesgo = [
-        ["1", "Rios", "alcantarillado", "canales de agua", "inundaciones"],
-        ["2", "Incendios"],
-        ["3", "Invasión en zonas no permitidas", "invasin", "invasion"],
-        ["4", "Energía", "cableado", "Postes de luz", "telefonía", "Televisión"],
-        ["5", "Edificicaciones", "viviendas", "calles", "estructuras en mal estado"],
-        ["6", "Accidentes de tránsito", "problemas de salud"],
-        ["7", "Seguridad y justicia", "robos", "riñas", "atentados"],
-        ["8", "Deslizamientos de tierra", "sismos"],
-        ["9", "otros"]
-    ];
-    repetir = ["si", "s"];
-    NoRepetir = ["no", "n"];
+    var data = req.body; // New messages in the "body" letiable
     data.messages.forEach(function (element) {
-        input = element.body;
-        input = input.toLocaleLowerCase().trim();
-        senderName = element.senderName;
-        chatId = element.chatId;
-        fromMe = element.fromMe;
-    });
-    console.log('users', users);
-    if (users.find(function (userValue) { return userValue.chatId == chatId; }) && !fromMe) {
-        if (saludosInicial.find(function (valueSaludo1) { return valueSaludo1 == input; })) {
-            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
-            user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.state = 'saludoInicial';
-            user.body = message;
-            sendMessage(user, function (x) { });
+        var userName = element.senderName;
+        var phone = String(element.author).split('@')[0];
+        var message = element.body;
+        var messageToSend = '';
+        if (!element.fromMe && element.author != '573116902401@c.us') {
+            phones.add(phone);
+            if (phones.has(phone)) {
+                console.log('phonese', phones);
+                console.log(element.author + ': ' + element.body); //Send it to console
+                manageUsers(message, phone, userName, messageToSend);
+            }
         }
-        else if (user.state == 'saludoInicial' && reporteRiesgo[0].find(function (valueCita) { return utilities.isContain(input, valueCita); })) {
-            input = '';
-            message = messagesTosendRiesgo.newMessage('DescReporte', senderName);
-            user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.state = 'DescReporte';
-            user.body = message;
-            sendMessage(user, function (x) { });
-        }
-        else if (user.state == 'saludoInicial' && reporteRiesgo[4].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
-            myArray = [
-                messagesTosendRiesgo.newMessage('despedida1', senderName),
-                messagesTosendRiesgo.newMessage('despedida2', senderName)
-            ];
-            var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
-            user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.body = randomMessage;
-            sendMessage(user, function (x) {
-            });
-            users.splice(users.indexOf(user), 1);
-        }
+    }); // For each message
+    res.send('Ok'); //Response does not matter
+});
+function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
+    messageRE = messageRE.toLocaleLowerCase();
+    var user = users.get(phoneRE);
+    if (user == undefined) {
+        messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', userNameRE);
+        user = new User_1.User(phoneRE, messageToSendRE, 'saludoInicial');
+        users.set(phoneRE, user);
+        sendMessage(user).then(function (res) {
+            if (res) {
+                siga = true;
+            }
+        });
     }
-    else if (saludosInicial.find(function (valueSaludo2) { return valueSaludo2 == input; })) {
-        message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
-        user = new User_1.User(chatId, message, 'saludoInicial');
-        users.push(user);
-        sendMessage(user, function (x) { });
+    else if (user.state == 'saludoInicial' && siga == true && constants.reporteRiesgo.find(function (valueSaludo1) { return utilities.isContain(messageRE, valueSaludo1); })) {
+        messageToSendRE = messageTosendRiesgo.newMessage('DescReporte', userNameRE);
+        user.state = 'DescReporte';
+        user.body = messageToSendRE;
+        sendMessage(user).then(function (res) {
+            if (res) {
+                siga = true;
+            }
+        });
     }
-}
-function subFlow() {
-    if (users.find(function (userValue) { return userValue.chatId == chatId; }) && !fromMe) {
-        //Ingresa l tipo de documento
-        console.log("Ingresó aquí");
-        if (user.state == 'DescReporte') {
-            if (input.match(/([a-zA-Z])/g) || input.match(/([0-9])/g)) {
-                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'cargarImagen';
-                user.body = message;
-                sendMessage(user, function (x) { });
+    else if (user.state == 'DescReporte' && siga == true && messageRE.match(/([a-zA-Z])/g) || messageRE.match(/([0-9])/g)) {
+        messageToSendRE = messageTosendRiesgo.newMessage('cargarImagen', userNameRE);
+        user.state = 'cargarImagen';
+        user.body = messageToSendRE;
+        sendMessage(user).then(function (res) {
+            if (res) {
+                siga = true;
             }
-        }
-        else if (user.state == 'cargarImagen') {
-            if (input.match(/([.])*\.(?:jpg|gif|png|jpeg)/g)) {
-                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'darUbicacion';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-            else {
-                message = messagesTosendRiesgo.newMessage('imagenValida', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'cargarImagen';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-        }
-        else if (user.state == 'darUbicacion') {
-            if (input.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?);\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/g)) {
-                documentNumber = parseInt(input);
-                message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'darCategoria';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-            else {
-                message = messagesTosendRiesgo.newMessage('ubicacionValida', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'darUbicacion';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-        }
-        else if (user.state == 'darCategoria') {
-            if (categoriasRiesgo[0].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[0].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[1].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[2].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[3].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[4].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[5].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[6].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[7].find(function (response) { return utilities.isContain(input, response); }) ||
-                categoriasRiesgo[8].find(function (response) { return utilities.isContain(input, response); })) {
-                message = messagesTosendRiesgo.newMessage('darGracias', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'darGracias';
-                user.body = message;
-                utilities.functionWithCallBack(sendMessage(user, function (x) { }), 3000).then(function (res) {
-                    message = messagesTosendRiesgo.newMessage('repetirRiesgo', senderName);
-                    user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                    user.state = 'repetirRiesgo';
-                    user.body = message;
-                    sendMessage(user, function (x) { });
-                });
-            }
-            else {
-                message = messagesTosendRiesgo.newMessage('cateValida', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'darCategoria';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-        }
-        else if (user.state == 'repetirRiesgo') {
-            console.log("Entró a repetir");
-            if (repetir.find(function (valueRepetir) { return valueRepetir == input; })) {
-                message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'saludoInicial';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-            else if (NoRepetir.find(function (valueRepetir) { return valueRepetir == input; })) {
-                //message = messagesTosendRiesgo.newMessage('repetir', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'saludoInicial';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-        }
-        else if (user.state == 'eligeCita2' && existeAfiliado) {
-            horasDisponibles.forEach(function (element, indice2) {
-                if (Number(indice2) == Number(input)) {
-                    hour = horasDisponibles[indice2 - 1];
-                    message = messagesTosendRiesgo.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
-                    user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                    user.state = 'eligeCita3';
-                    user.body = message;
-                    sendMessage(user, function (x) { });
+        });
+    }
+    else if (user.state == 'cargarImagen') {
+        if (messageRE.match(/([.])*\.(?:jpg|gif|png|jpeg)/g)) {
+            messageToSendRE = messageTosendRiesgo.newMessage('darUbicacion', userNameRE);
+            user.state = 'darUbicacion';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
                 }
             });
         }
-        else if (user.state == 'eligeCita3' && existeAfiliado) {
-            if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-                message = messagesTosendRiesgo.newMessage('despedida1', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'despedida1';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-            else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
-                message = messagesTosendRiesgo.newMessage('eligeCita1', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'eligeCita1';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
+        else {
+            messageToSendRE = messageTosendRiesgo.newMessage('imagenValida', userNameRE);
+            user.state = 'cargarImagen';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
         }
-        else if (user.state == 'despedida1' && existeAfiliado) {
-            if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-                message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'saludoInicial';
-                user.body = message;
-                sendMessage(user, function (x) { });
-                users.push(user);
-            }
+    }
+    else if (user.state == 'darUbicacion') {
+        if (messageRE.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?);\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/g)) {
+            messageToSendRE = messageTosendRiesgo.newMessage('darCategoria', userNameRE);
+            user.state = 'darCategoria';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
+        }
+        else {
+            messageToSendRE = messageTosendRiesgo.newMessage('ubicacionValida', userNameRE);
+            user.state = 'darUbicacion';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
+        }
+    }
+    else if (user.state == 'darCategoria') {
+        if (constants.rios.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.incendios.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.invasion.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.teleEner.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.calles.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.saludTran.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.seguRobo.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.sismo.find(function (response) { return utilities.isContain(messageRE, response); }) ||
+            constants.otros.find(function (response) { return utilities.isContain(messageRE, response); })) {
+            messageToSendRE = messageTosendRiesgo.newMessage('darGracias', userNameRE);
+            user.state = 'darGracias';
+            user.body = messageToSendRE;
+            utilities.functionWithCallBack(sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            }), 3000).then(function (res) {
+                messageToSendRE = messageTosendRiesgo.newMessage('repetirRiesgo', userNameRE);
+                user.state = 'repetirRiesgo';
+                user.body = messageToSendRE;
+                sendMessage(user).then(function (res) {
+                    if (res) {
+                        siga = true;
+                    }
+                });
+            });
+        }
+        else {
+            messageToSendRE = messageTosendRiesgo.newMessage('cateValida', userNameRE);
+            user.state = 'darCategoria';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
+        }
+    }
+    else if (user.state == 'repetirRiesgo') {
+        console.log("Entró a repetir");
+        if (constants.si.find(function (valueRepetir) { return valueRepetir == messageRE; })) {
+            messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', messageRE);
+            user.state = 'saludoInicial';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
+        }
+        else if (constants.no.find(function (valueRepetir) { return valueRepetir == messageRE; })) {
+            //message = messagesTosendRiesgo.newMessage('repetir', senderName);
+            user.state = 'saludoInicial';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
+        }
+    }
+    else if (user.state == 'despedida1' && siga == true && constants.no.find(function (valueSaludo1) { return utilities.isContain(messageRE, valueSaludo1); })) {
+        byeMessage(phoneRE, userNameRE, messageRE);
+    }
+    else if (user.state == 'despedida1' && siga == true && constants.si.find(function (valueSaludo1) { return utilities.isContain(messageRE, valueSaludo1); })) {
+        byeMessage(phoneRE, userNameRE, messageRE);
+    }
+}
+function byeMessage(phoneRE, userNameRE, messageRE) {
+    var user = users.get(phoneRE);
+    var messageToSendRE = '';
+    if (user.state == 'afiliacionRespu1' || user.state == 'sentPdf' || user.state == 'link' || user.state == 'cancelarInicial' && siga == true) {
+        user.state = 'despedida1';
+        utilities.functionWithCallBack(randomMessageFun(userNameRE), 3000).then(function (res) {
+            user.body = res;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
+        });
+    }
+    else if (user.state == 'despedida1' && siga == true) {
+        if (constants.no.find(function (valueSaludo1) { return utilities.isContain(messageRE, valueSaludo1); })) {
+            user.body = 'Ok hasta pronto ' + userNameRE;
+            users.delete(phoneRE);
+            utilities.functionWithCallBack(sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            }), 1000).then(function (res) {
+            });
+        }
+        else if (constants.si.find(function (valueSaludo1) { return utilities.isContain(messageRE, valueSaludo1); })) {
+            messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', userNameRE);
+            messageToSendRE = messageToSendRE.substr(messageToSendRE.indexOf('.') + 1, messageToSendRE.length);
+            user.state = 'saludoInicial';
+            user.body = messageToSendRE;
+            sendMessage(user).then(function (res) {
+                if (res) {
+                    siga = true;
+                }
+            });
         }
     }
 }
-function sendMessage(data, callback) {
-    request({
-        url: url,
-        method: "POST",
-        json: data
-    }, function (err, data, response) {
-        if (response.sent) {
-            callback(data);
-        }
+function randomMessageFun(userNameRE) {
+    myArray = [
+        messageTosendRiesgo.newMessage('despedida1', userNameRE),
+        messageTosendRiesgo.newMessage('despedida2', userNameRE)
+    ];
+    var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
+    return randomMessage;
+}
+function encodeBase64(filex) {
+    // Convert file to base64 string
+    return new Promise(function (resolve) {
+        console.log('FOLE', filex);
+        var reader = new FileReader();
+        // Read file content on file loaded event
+        reader.onload = function (event) {
+            console.log('evnt', event);
+            resolve(event.target.result);
+        };
+        // Convert data to base64 
+        reader.readAsDataURL(filex);
     });
 }
-function availableDates() {
-    switch (mes) {
-        case 0:
-            {
-                mesString = 'January';
-            }
-            break;
-        case 1:
-            {
-                mesString = 'February';
-            }
-            break;
-        case 2:
-            {
-                mesString = 'March';
-            }
-            break;
-        case 3:
-            {
-                mesString = 'April';
-            }
-            break;
-        case 4:
-            {
-                mesString = 'May';
-            }
-            break;
-        case 5:
-            {
-                mesString = 'June';
-            }
-            break;
-        case 6:
-            {
-                mesString = 'July';
-            }
-            break;
-        case 7:
-            {
-                mesString = 'August';
-            }
-            break;
-        case 8:
-            {
-                mesString = 'September';
-            }
-            break;
-        case 9:
-            {
-                mesString = 'October';
-            }
-            break;
-        case 10:
-            {
-                mesString = 'November';
-            }
-            break;
-        case 11:
-            {
-                mesString = 'December';
-            }
-            break;
-    }
-    var diasDisponibles = fechaActual.getDay();
-    var contador = 0;
-    /// ESTO ES EN CASO DE QUE EL HORARIO DE ATENFCIÓN SEA DE LUNES A VIERNES, EN CAOS DE QUE SE VA ATENDER FINES DE SEMANA HAY QUE HACER ALGO ADICIONAL
-    for (var i = diasDisponibles; i <= 5; i++) {
-        if (i == diasDisponibles) {
-            arregloDias.push({ "text": 'Hoy ' + utilities.diaSemana(dia, mesString, anio) + ' ' + dia + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
-        }
-        else if (i > diasDisponibles) {
-            arregloDias.push({ "text": utilities.diaSemana(dia + contador, mesString, anio) + ' ' + (dia + contador) + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
-        }
-        contador++;
-    }
+function sendMessage(data) {
+    return new Promise(function (resolve) {
+        request({
+            url: url,
+            method: "POST",
+            json: data
+        }, function (err, data, res) {
+            resolve(res.sent);
+        });
+    });
 }
-/* function consultarServicio(tipo: string, cedula: number) {
-    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, (x: any) => {
+function sendFile(data) {
+    return new Promise(function (resolve) {
+        request({
+            url: urlFile,
+            method: "POST",
+            json: data
+        }, function (err, data, res) {
+            resolve(res.sent);
+        });
+    });
+}
+function descargaPdf(callback) {
+    request({
+        url: "http://104.198.179.226/dns/CertificadoAfiliacion20190109171415_P.pdf",
+        method: "GET",
+    }, function (err, data, response) {
+        console.log('resp____', response);
+        callback(response);
+    });
+    /*     return response;
+     */ 
+}
+function consultarServicio(tipo, cedula) {
+    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, function (x) {
         datos = x;
     });
-} */
+}
 var server = app.listen(process.env.PORT, function () {
     var host = server.address().address;
     var port = server.address().port;
