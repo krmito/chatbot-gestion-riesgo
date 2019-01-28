@@ -5,23 +5,23 @@ let messageTosendRiesgo = {
 
         switch (state) {
             case 'saludoInicial':
-                mensaje = `Bienvenido ${userName} a la linea de reporte de incidentes y 
+                mensaje = `Bienvenido *${userName}* a la linea de reporte de incidentes y 
             riesgos de la Alcaldía de Cali, cuentenos que quiere hacer:
             
         * Si quieres reportar un riesgo, escribe R o riesgo
         * Si quieres consultar riesgos en tu zona, escribe C o Consulta`;
                 break;
             case 'DescReporte':
-                mensaje = `Por favor ${userName} describe brevemente el riesgo que ves:`;
+                mensaje = `Por favor *${userName}* describe brevemente el riesgo que ves:`;
                 break;
             case 'cargarImagen':
-                mensaje = `Por favor ${userName}  envia una imagen del riesgo que ves`;
+                mensaje = `Por favor *${userName}*  envia una imagen del riesgo que ves`;
                 break;
             case 'darUbicacion':
-                mensaje = `Por favor  ${userName}  envianos tu ubicacion`;
+                mensaje = `Por favor  *${userName}*  envianos tu ubicacion`;
                 break;
             case 'darCategoria':
-                mensaje = `Por favor  ${userName}  indica la categoria del riesgo:
+                mensaje = `Por favor  *${userName}*  indica la categoria del riesgo:
 
                 1. Rios, alcantarillado, canales de agua o inundaciones
                 2. Incendios
@@ -34,19 +34,19 @@ let messageTosendRiesgo = {
                 9. Otros`;
                 break;
             case 'darGracias':
-                mensaje = `Gracias  ${userName}  por reportar el evento, de inmediato avisaremos a las autoridades competentes.`;
+                mensaje = `Gracias  *${userName}*  por reportar el evento, de inmediato avisaremos a las autoridades competentes.`;
                 break;
             case 'repetirRiesgo':
-                mensaje = ` ${userName} deseas hacer algúna otra operación? (si / no)`;
+                mensaje = ` *${userName}* deseas hacer algúna otra operación? (si / no)`;
                 break;
             case 'imagenValida':
-                mensaje = ` ${userName}, ingresa una imagen válida`;
+                mensaje = ` *${userName}*, ingresa una imagen válida`;
                 break;
             case 'ubicacionValida':
-                mensaje = ` ${userName}, ingresa una ubicación válida`;
+                mensaje = ` *${userName}*, ingresa una ubicación válida`;
                 break;
             case 'cateValida':
-                mensaje = ` ${userName}, ingresa una categoría válida`;
+                mensaje = ` *${userName}*, ingresa una categoría válida`;
                 break;
         }
         return mensaje;

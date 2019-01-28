@@ -186,7 +186,7 @@ function manageUsers(messageRE: string, phoneRE: string, userNameRE: string, mes
         console.log("Entró a repetir");
 
         if (constants.si.find((valueRepetir: any) => valueRepetir == messageRE)) {
-            messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', messageRE);
+            messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', userNameRE);
             user.state = 'saludoInicial';
             user.body = messageToSendRE;
             sendMessage(user).then(res => {
