@@ -36,7 +36,7 @@ let messageTosendRiesgo = {
             case 'darGracias':
                 mensaje = `Gracias  ${userName}  por reportar el evento, de inmediato avisaremos a las autoridades competentes.`;
                 break;
-            case 'repetir':
+            case 'repetirRiesgo':
                 mensaje = ` ${userName} deseas hacer algúna otra operación? (si / no)`;
                 break;
             case 'imagenValida':

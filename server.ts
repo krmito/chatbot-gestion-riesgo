@@ -194,13 +194,12 @@ function subFlow() {
                 categoriasRiesgo[8].find(response => utilities.isContain(input, response))) {
 
                 utilities.functionWithCallBack(message = messagesTosendRiesgo.newMessage('darGracias', senderName), 3000).then((res: any) => {
-                    message = messagesTosendRiesgo.newMessage('repetir', senderName);
+                    message = messagesTosendRiesgo.newMessage('repetirRiesgo', senderName);
+                    user = users.find(userValue => userValue.chatId == chatId);
+                    user.state = 'repetirRiesgo';
+                    user.body = message;
+                    sendMessage(user, (x: any) => { });
                 });
-
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'repetir';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
             } else {
                 message = messagesTosendRiesgo.newMessage('cateValida', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
@@ -210,7 +209,7 @@ function subFlow() {
             }
         }
 
-    } else if (user.state == 'repetir') {
+    } else if (user.state == 'repetirRiesgo') {
         if (repetir.find(valueRepetir => valueRepetir == input)) {
             message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(userValue => userValue.chatId == chatId);

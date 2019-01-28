@@ -174,12 +174,12 @@ function subFlow() {
                 categoriasRiesgo[7].find(function (response) { return utilities.isContain(input, response); }) ||
                 categoriasRiesgo[8].find(function (response) { return utilities.isContain(input, response); })) {
                 utilities.functionWithCallBack(message = messagesTosendRiesgo.newMessage('darGracias', senderName), 3000).then(function (res) {
-                    message = messagesTosendRiesgo.newMessage('repetir', senderName);
+                    message = messagesTosendRiesgo.newMessage('repetirRiesgo', senderName);
+                    user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                    user.state = 'repetirRiesgo';
+                    user.body = message;
+                    sendMessage(user, function (x) { });
                 });
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'repetir';
-                user.body = message;
-                sendMessage(user, function (x) { });
             }
             else {
                 message = messagesTosendRiesgo.newMessage('cateValida', senderName);
@@ -190,7 +190,7 @@ function subFlow() {
             }
         }
     }
-    else if (user.state == 'repetir') {
+    else if (user.state == 'repetirRiesgo') {
         if (repetir.find(function (valueRepetir) { return valueRepetir == input; })) {
             message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
