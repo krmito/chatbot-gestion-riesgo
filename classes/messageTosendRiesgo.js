@@ -24,6 +24,9 @@ var messageTosendRiesgo = {
             case 'repetir':
                 mensaje = " " + userName + " deseas hacer alg\u00FAna otra operaci\u00F3n? (si / no)";
                 break;
+            case 'imagenValida':
+                mensaje = " " + userName + ", ingresa una imagen v\u00E1lida";
+                break;
         }
         return mensaje;
     }

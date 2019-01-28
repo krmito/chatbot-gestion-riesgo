@@ -105,7 +105,7 @@ function subFlow() {
         //Ingresa l tipo de documento
         console.log("Ingresó aquí");
         if (user.state == 'DescReporte') {
-            if (input.match(/([a-zA-Z])/g)) {
+            if (input.match(/([a-zA-Z0-9])/g)) {
                 message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
                 user.state = 'cargarImagen';
@@ -114,11 +114,20 @@ function subFlow() {
             }
         }
         else if (user.state == 'cargarImagen') {
-            message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
-            user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.state = 'darUbicacion';
-            user.body = message;
-            sendMessage(user, function (x) { });
+            if (input.match(/([.])*\.(?:jpg|gif|png|jpeg)/g)) {
+                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
+                user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                user.state = 'darUbicacion';
+                user.body = message;
+                sendMessage(user, function (x) { });
+            }
+            else {
+                message = messagesTosendRiesgo.newMessage('imagenValida', senderName);
+                user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                user.state = 'cargarImagen';
+                user.body = message;
+                sendMessage(user, function (x) { });
+            }
         }
         else if (user.state == 'darUbicacion') {
             documentNumber = parseInt(input);

@@ -119,7 +119,7 @@ function subFlow() {
 
         if (user.state == 'DescReporte') {
 
-            if (input.match(/([a-zA-Z])/g)) {
+            if (input.match(/([a-zA-Z0-9])/g)) {
 
                 message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
@@ -129,12 +129,22 @@ function subFlow() {
             }
 
         } else if (user.state == 'cargarImagen') {
+            if (input.match(/([.])*\.(?:jpg|gif|png|jpeg)/g)) {
 
-            message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
-            user = users.find(userValue => userValue.chatId == chatId);
-            user.state = 'darUbicacion';
-            user.body = message;
-            sendMessage(user, (x: any) => { });
+                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
+                user = users.find(userValue => userValue.chatId == chatId);
+                user.state = 'darUbicacion';
+                user.body = message;
+                sendMessage(user, (x: any) => { });
+
+            } else {
+
+                message = messagesTosendRiesgo.newMessage('imagenValida', senderName);
+                user = users.find(userValue => userValue.chatId == chatId);
+                user.state = 'cargarImagen';
+                user.body = message;
+                sendMessage(user, (x: any) => { });
+            }
 
         } else if (user.state == 'darUbicacion') {
 
