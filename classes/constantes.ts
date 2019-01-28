@@ -14,8 +14,8 @@ const constantes = {
     seguRobo: ["7", "Seguridad y justicia", "robos", "riñas", "atentados"],
     sismo: ["8", "Deslizamientos de tierra", "sismos"],
     otros: ["9", "otros"],
-    repetir : ["si", "s"],
-    NoRepetir : ["no", "n"],
+    si : ["si", "s"],
+    no : ["no", "n"],
 }
 
 
