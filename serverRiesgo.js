@@ -4,7 +4,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var request = require("request");
 var User_1 = require("./classes/User");
-var messagesToSend = require("./classes/messagesTosendRiesgo");
+var messagesTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
 var app = express();
 var url = 'https://eu24.chat-api.com/instance23630/sendMessage?token=fhbjhwk1fvtfy2j4';
@@ -68,7 +68,7 @@ function checkMessage() {
     console.log('users', users);
     if (users.find(function (userValue) { return userValue.chatId == chatId; }) && !fromMe) {
         if (saludosInicial.find(function (valueSaludo1) { return valueSaludo1 == input; })) {
-            message = messagesToSend.newMessage('saludoInicial', senderName);
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'saludoInicial';
             user.body = message;
@@ -76,7 +76,7 @@ function checkMessage() {
         }
         else if (user.state == 'saludoInicial' && reporteRiesgo[0].find(function (valueCita) { return utilities.isContain(input, valueCita); })) {
             input = '';
-            message = messagesToSend.newMessage('DescReporte', senderName);
+            message = messagesTosendRiesgo.newMessage('DescReporte', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'DescReporte';
             user.body = message;
@@ -84,8 +84,8 @@ function checkMessage() {
         }
         else if (user.state == 'saludoInicial' && reporteRiesgo[4].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
             myArray = [
-                messagesToSend.newMessage('despedida1', senderName),
-                messagesToSend.newMessage('despedida2', senderName)
+                messagesTosendRiesgo.newMessage('despedida1', senderName),
+                messagesTosendRiesgo.newMessage('despedida2', senderName)
             ];
             var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
@@ -96,7 +96,7 @@ function checkMessage() {
         }
     }
     else if (saludosInicial.find(function (valueSaludo2) { return valueSaludo2 == input; })) {
-        message = messagesToSend.newMessage('saludoInicial', senderName);
+        message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
         user = new User_1.User(chatId, message, 'saludoInicial');
         users.push(user);
         sendMessage(user, function (x) { });
@@ -107,7 +107,7 @@ function subFlow() {
         //Ingresa l tipo de documento
         if (user.state == 'DescReporte') {
             if (consultaRiesgo[0].find(function (response) { return utilities.isContain(input, response); }) || consultaRiesgo[1].find(function (response) { return utilities.isContain(input, response); }) || consultaRiesgo[2].find(function (response) { return utilities.isContain(input, response); })) {
-                message = messagesToSend.newMessage('cargarImagen', senderName);
+                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
                 user.state = 'cargarImagen';
                 user.body = message;
@@ -115,8 +115,8 @@ function subFlow() {
             }
             else if (consultaRiesgo[2].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
                 var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
@@ -128,7 +128,7 @@ function subFlow() {
         }
         else if (user.state == 'cargarImagen') {
             if (tipoDocumento[0].find(function (response) { return utilities.isContain(input, response); }) || tipoDocumento[1].find(function (response) { return utilities.isContain(input, response); }) || tipoDocumento[2].find(function (response) { return utilities.isContain(input, response); })) {
-                message = messagesToSend.newMessage('darUbicacion', senderName);
+                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
                 user.state = 'darUbicacion';
                 user.body = message;
@@ -136,8 +136,8 @@ function subFlow() {
             }
             else if (tipoDocumento[3].find(function (valueCancelar) { return utilities.isContain(input, valueCancelar); })) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
                 var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
@@ -149,7 +149,7 @@ function subFlow() {
         }
         else if (user.state == 'darUbicacion') {
             documentNumber = parseInt(input);
-            message = messagesToSend.newMessage('darCategoria', senderName);
+            message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'darCategoria';
             user.body = message;
@@ -157,7 +157,7 @@ function subFlow() {
         }
         else if (user.state == 'darCategoria') {
             existeAfiliado = false;
-            message = messagesToSend.newMessage('darGracias', senderName);
+            message = messagesTosendRiesgo.newMessage('darGracias', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'darGracias';
             user.body = message;
@@ -167,7 +167,7 @@ function subFlow() {
     }
     else if (user.state == 'darGracias' && existeAfiliado) {
         existeAfiliado = false;
-        message = messagesToSend.newMessage('repetir', senderName);
+        message = messagesTosendRiesgo.newMessage('repetir', senderName);
         user = users.find(function (userValue) { return userValue.chatId == chatId; });
         user.state = 'repetir';
         user.body = message;
@@ -178,7 +178,7 @@ function subFlow() {
         horasDisponibles.forEach(function (element, indice2) {
             if (Number(indice2) == Number(input)) {
                 hour = horasDisponibles[indice2 - 1];
-                message = messagesToSend.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
+                message = messagesTosendRiesgo.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
                 user.state = 'eligeCita3';
                 user.body = message;
@@ -188,14 +188,14 @@ function subFlow() {
     }
     else if (user.state == 'eligeCita3' && existeAfiliado) {
         if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-            message = messagesToSend.newMessage('despedida1', senderName);
+            message = messagesTosendRiesgo.newMessage('despedida1', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'despedida1';
             user.body = message;
             sendMessage(user, function (x) { });
         }
         else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
-            message = messagesToSend.newMessage('eligeCita1', senderName);
+            message = messagesTosendRiesgo.newMessage('eligeCita1', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'eligeCita1';
             user.body = message;
@@ -204,7 +204,7 @@ function subFlow() {
     }
     else if (user.state == 'despedida1' && existeAfiliado) {
         if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-            message = messagesToSend.newMessage('saludoInicial', senderName);
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'saludoInicial';
             user.body = message;

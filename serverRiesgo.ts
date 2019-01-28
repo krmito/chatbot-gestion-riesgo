@@ -2,7 +2,7 @@ import express = require('express');
 import bodyParser = require('body-parser');
 import request = require('request');
 import { User } from "./classes/User";
-let messagesToSend = require("./classes/messagesTosendRiesgo");
+let messagesTosendRiesgo = require("./classes/messageTosendRiesgo");
 let utilities = require("./classes/utilities");
 
 let app = express();
@@ -78,7 +78,7 @@ function checkMessage() {
     console.log('users', users);
     if (users.find(userValue => userValue.chatId == chatId) && !fromMe) {
         if (saludosInicial.find(valueSaludo1 => valueSaludo1 == input)) {
-            message = messagesToSend.newMessage('saludoInicial', senderName);
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'saludoInicial';
             user.body = message;
@@ -86,7 +86,7 @@ function checkMessage() {
 
         } else if (user.state == 'saludoInicial' && reporteRiesgo[0].find(valueCita => utilities.isContain(input, valueCita))) {
             input = '';
-            message = messagesToSend.newMessage('DescReporte', senderName);
+            message = messagesTosendRiesgo.newMessage('DescReporte', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'DescReporte';
             user.body = message;
@@ -94,8 +94,8 @@ function checkMessage() {
 
         } else if (user.state == 'saludoInicial' && reporteRiesgo[4].find(valueCancel => utilities.isContain(input, valueCancel))) {
             myArray = [
-                messagesToSend.newMessage('despedida1', senderName),
-                messagesToSend.newMessage('despedida2', senderName)
+                messagesTosendRiesgo.newMessage('despedida1', senderName),
+                messagesTosendRiesgo.newMessage('despedida2', senderName)
             ];
 
             let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
@@ -106,7 +106,7 @@ function checkMessage() {
             users.splice(users.indexOf(user), 1);
         }
     } else if (saludosInicial.find(valueSaludo2 => valueSaludo2 == input)) {
-        message = messagesToSend.newMessage('saludoInicial', senderName);
+        message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
         user = new User(chatId, message, 'saludoInicial')
         users.push(user);
         sendMessage(user, (x: any) => { });
@@ -119,15 +119,15 @@ function subFlow() {
         if (user.state == 'DescReporte') {
             if (consultaRiesgo[0].find(response => utilities.isContain(input, response)) || consultaRiesgo[1].find(response => utilities.isContain(input, response)) || consultaRiesgo[2].find(response => utilities.isContain(input, response))) {
 
-                message = messagesToSend.newMessage('cargarImagen', senderName);
+                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
                 user.state = 'cargarImagen';
                 user.body = message;
                 sendMessage(user, (x: any) => { });
             } else if (consultaRiesgo[2].find(valueCancel => utilities.isContain(input, valueCancel))) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
 
                 let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
@@ -140,15 +140,15 @@ function subFlow() {
         } else if (user.state == 'cargarImagen') {
             if (tipoDocumento[0].find(response => utilities.isContain(input, response)) || tipoDocumento[1].find(response => utilities.isContain(input, response)) || tipoDocumento[2].find(response => utilities.isContain(input, response))) {
 
-                message = messagesToSend.newMessage('darUbicacion', senderName);
+                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
                 user.state = 'darUbicacion';
                 user.body = message;
                 sendMessage(user, (x: any) => { });
             } else if (tipoDocumento[3].find(valueCancelar => utilities.isContain(input, valueCancelar))) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
 
                 let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
@@ -162,7 +162,7 @@ function subFlow() {
         } else if (user.state == 'darUbicacion') {
 
             documentNumber = parseInt(input);
-            message = messagesToSend.newMessage('darCategoria', senderName);
+            message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'darCategoria';
             user.body = message;
@@ -171,7 +171,7 @@ function subFlow() {
         } else if (user.state == 'darCategoria') {
 
             existeAfiliado = false;
-            message = messagesToSend.newMessage('darGracias', senderName);
+            message = messagesTosendRiesgo.newMessage('darGracias', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'darGracias';
             user.body = message;
@@ -183,7 +183,7 @@ function subFlow() {
     } else if (user.state == 'darGracias' && existeAfiliado) {
         
         existeAfiliado = false;
-        message = messagesToSend.newMessage('repetir', senderName);
+        message = messagesTosendRiesgo.newMessage('repetir', senderName);
         user = users.find(userValue => userValue.chatId == chatId);
         user.state = 'repetir';
         user.body = message;
@@ -195,7 +195,7 @@ function subFlow() {
             if (Number(indice2) == Number(input)) {
                 hour = horasDisponibles[indice2 - 1];
 
-                message = messagesToSend.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
+                message = messagesTosendRiesgo.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
                 user = users.find(userValue => userValue.chatId == chatId);
                 user.state = 'eligeCita3';
                 user.body = message;
@@ -206,13 +206,13 @@ function subFlow() {
     } else if (user.state == 'eligeCita3' && existeAfiliado) {
 
         if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-            message = messagesToSend.newMessage('despedida1', senderName);
+            message = messagesTosendRiesgo.newMessage('despedida1', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'despedida1';
             user.body = message;
             sendMessage(user, (x: any) => { });
         } else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
-            message = messagesToSend.newMessage('eligeCita1', senderName);
+            message = messagesTosendRiesgo.newMessage('eligeCita1', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'eligeCita1';
             user.body = message;
@@ -221,7 +221,7 @@ function subFlow() {
 
     } else if (user.state == 'despedida1' && existeAfiliado) {
         if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-            message = messagesToSend.newMessage('saludoInicial', senderName);
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'saludoInicial';
             user.body = message;
