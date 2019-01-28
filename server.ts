@@ -2,7 +2,7 @@ import express = require('express');
 import bodyParser = require('body-parser');
 import request = require('request');
 import { User } from "./classes/User";
-let messagesTosendRiesgo = require("./classes/messageTosendRiesgo");
+let messagesTosendRiesgo = require("./classes/messagesTosendRiesgo");
 let utilities = require("./classes/utilities");
 
 let app = express();
