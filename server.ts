@@ -41,6 +41,7 @@ let categoriasRiesgo: Array<string[]> = [];
 let arregloDias: Array<any> = [];
 let myArray: Array<any> = [];
 let repetir: Array<string> = [];
+let NoRepetir: Array<string> = [];
 app.use(bodyParser.json());
 
 app.post('/my_webhook_url', (req, res) => {
@@ -76,7 +77,8 @@ function checkMessage() {
         ["8", "Deslizamientos de tierra", "sismos"],
         ["9", "otros"]
     ];
-    repetir = ["si", "no"];
+    repetir = ["si", "s"];
+    NoRepetir = ["no", "n"];
 
     data.messages.forEach((element: any) => {
         input = element.body;
@@ -180,69 +182,44 @@ function subFlow() {
 
         } else if (user.state == 'darCategoria') {
 
-            categoriasRiesgo.forEach((element, index) => {
-                if (categoriasRiesgo[index].find(response => utilities.isContain(input, response))) {
-                    console.log(element);
-                    message = messagesTosendRiesgo.newMessage('darGracias', senderName);
-                    user = users.find(userValue => userValue.chatId == chatId);
-                    user.state = 'darGracias';
-                    user.body = message;
-                    sendMessage(user, (x: any) => { });
-                } else {
-                    message = messagesTosendRiesgo.newMessage('cateValida', senderName);
-                    user = users.find(userValue => userValue.chatId == chatId);
-                    user.state = 'darCategoria';
-                    user.body = message;
-                    sendMessage(user, (x: any) => { });
-                }
-            });
+            if (categoriasRiesgo[0].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[0].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[1].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[2].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[3].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[4].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[5].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[6].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[7].find(response => utilities.isContain(input, response)) ||
+                categoriasRiesgo[8].find(response => utilities.isContain(input, response))) {
+
+                message = messagesTosendRiesgo.newMessage('darGracias', senderName);
+                user = users.find(userValue => userValue.chatId == chatId);
+                user.state = 'darGracias';
+                user.body = message;
+                sendMessage(user, (x: any) => { });
+            } else {
+                message = messagesTosendRiesgo.newMessage('cateValida', senderName);
+                user = users.find(userValue => userValue.chatId == chatId);
+                user.state = 'darCategoria';
+                user.body = message;
+                sendMessage(user, (x: any) => { });
+            }
         }
 
     } else if (user.state == 'darGracias') {
         if (repetir.find(valueRepetir => valueRepetir == input)) {
-            message = messagesTosendRiesgo.newMessage('repetir', senderName);
-            user = users.find(userValue => userValue.chatId == chatId);
-            user.state = 'repetir';
-            user.body = message;
-            sendMessage(user, (x: any) => { });
-        }
-    } else if (user.state == 'eligeCita2' && existeAfiliado) {
-        horasDisponibles.forEach((element, indice2) => {
-            if (Number(indice2) == Number(input)) {
-                hour = horasDisponibles[indice2 - 1];
-
-                message = messagesTosendRiesgo.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'eligeCita3';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-            }
-
-        });
-    } else if (user.state == 'eligeCita3' && existeAfiliado) {
-
-        if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-            message = messagesTosendRiesgo.newMessage('despedida1', senderName);
-            user = users.find(userValue => userValue.chatId == chatId);
-            user.state = 'despedida1';
-            user.body = message;
-            sendMessage(user, (x: any) => { });
-        } else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
-            message = messagesTosendRiesgo.newMessage('eligeCita1', senderName);
-            user = users.find(userValue => userValue.chatId == chatId);
-            user.state = 'eligeCita1';
-            user.body = message;
-            sendMessage(user, (x: any) => { });
-        }
-
-    } else if (user.state == 'despedida1' && existeAfiliado) {
-        if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
             message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'saludoInicial';
             user.body = message;
             sendMessage(user, (x: any) => { });
-            users.push(user);
+        } else if (NoRepetir.find(valueRepetir => valueRepetir == input)) {
+            //message = messagesTosendRiesgo.newMessage('repetir', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'saludoInicial';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
         }
     }
 }
@@ -259,44 +236,3 @@ function sendMessage(data: any, callback: any) {
         }
     });
 }
-
-function availableDates() {
-    switch (mes) {
-        case 0: { mesString = 'January' } break;
-        case 1: { mesString = 'February' } break;
-        case 2: { mesString = 'March' } break;
-        case 3: { mesString = 'April' } break;
-        case 4: { mesString = 'May' } break;
-        case 5: { mesString = 'June' } break;
-        case 6: { mesString = 'July' } break;
-        case 7: { mesString = 'August' } break;
-        case 8: { mesString = 'September' } break;
-        case 9: { mesString = 'October' } break;
-        case 10: { mesString = 'November' } break;
-        case 11: { mesString = 'December' } break;
-    }
-
-    let diasDisponibles = fechaActual.getDay();
-    let contador = 0;
-    /// ESTO ES EN CASO DE QUE EL HORARIO DE ATENFCIÓN SEA DE LUNES A VIERNES, EN CAOS DE QUE SE VA ATENDER FINES DE SEMANA HAY QUE HACER ALGO ADICIONAL
-    for (let i = diasDisponibles; i <= 5; i++) {
-        if (i == diasDisponibles) {
-            arregloDias.push({ "text": 'Hoy ' + utilities.diaSemana(dia, mesString, anio) + ' ' + dia + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
-        } else if (i > diasDisponibles) {
-            arregloDias.push({ "text": utilities.diaSemana(dia + contador, mesString, anio) + ' ' + (dia + contador) + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
-        }
-        contador++;
-    }
-}
-
-/* function consultarServicio(tipo: string, cedula: number) {
-    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, (x: any) => {
-        datos = x;
-    });
-} */
-
-let server = app.listen(process.env.PORT, function () {
-    let host = server.address().address;
-    let port = server.address().port;
-    console.log("El servidor se encuentra en el puerto " + port + " y el host es " + host);
-});
