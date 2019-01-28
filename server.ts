@@ -148,7 +148,7 @@ function subFlow() {
 
         } else if (user.state == 'darUbicacion') {
 
-            if (input.match(/^(\-?\d+(\.\d+)?).\s*(\-?\d+(\.\d+)?)$/g)) {
+            if (input.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?);\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/g)) {
                 documentNumber = parseInt(input);
                 message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
