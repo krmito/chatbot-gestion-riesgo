@@ -173,9 +173,11 @@ function subFlow() {
                 categoriasRiesgo[6].find(function (response) { return utilities.isContain(input, response); }) ||
                 categoriasRiesgo[7].find(function (response) { return utilities.isContain(input, response); }) ||
                 categoriasRiesgo[8].find(function (response) { return utilities.isContain(input, response); })) {
-                message = messagesTosendRiesgo.newMessage('darGracias', senderName);
+                utilities.functionWithCallBack(message = messagesTosendRiesgo.newMessage('darGracias', senderName), 3000).then(function (res) {
+                    message = messagesTosendRiesgo.newMessage('repetir', senderName);
+                });
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'darGracias';
+                user.state = 'repetir';
                 user.body = message;
                 sendMessage(user, function (x) { });
             }
@@ -188,7 +190,7 @@ function subFlow() {
             }
         }
     }
-    else if (user.state == 'darGracias') {
+    else if (user.state == 'repetir') {
         if (repetir.find(function (valueRepetir) { return valueRepetir == input; })) {
             message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
