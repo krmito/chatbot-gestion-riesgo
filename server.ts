@@ -71,7 +71,7 @@ function checkMessage() {
         input = input.toLocaleLowerCase().trim();
         senderName = element.senderName;
         chatId = element.chatId;
-        fromMe = element.fromMe 
+        fromMe = element.fromMe
     });
 
 
@@ -117,48 +117,21 @@ function subFlow() {
     if (users.find(userValue => userValue.chatId == chatId) && !fromMe) {
         //Ingresa l tipo de documento
         if (user.state == 'DescReporte') {
-            if (consultaRiesgo[0].find(response => utilities.isContain(input, response)) || consultaRiesgo[1].find(response => utilities.isContain(input, response)) || consultaRiesgo[2].find(response => utilities.isContain(input, response))) {
 
-                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'cargarImagen';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-            } else if (consultaRiesgo[2].find(valueCancel => utilities.isContain(input, valueCancel))) {
-                myArray = [
-                    messagesTosendRiesgo.newMessage('despedida1', senderName),
-                    messagesTosendRiesgo.newMessage('despedida2', senderName)
-                ];
+            message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'cargarImagen';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
 
-                let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.body = randomMessage;
-                sendMessage(user, (x: any) => {
-                });
-                users.splice(users.indexOf(user), 1);
-            }
         } else if (user.state == 'cargarImagen') {
-            if (tipoDocumento[0].find(response => utilities.isContain(input, response)) || tipoDocumento[1].find(response => utilities.isContain(input, response)) || tipoDocumento[2].find(response => utilities.isContain(input, response))) {
+            
+            message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'darUbicacion';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
 
-                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'darUbicacion';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-            } else if (tipoDocumento[3].find(valueCancelar => utilities.isContain(input, valueCancelar))) {
-                myArray = [
-                    messagesTosendRiesgo.newMessage('despedida1', senderName),
-                    messagesTosendRiesgo.newMessage('despedida2', senderName)
-                ];
-
-                let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.body = randomMessage;
-                sendMessage(user, (x: any) => {
-                });
-                users.splice(users.indexOf(user), 1);
-
-            }
         } else if (user.state == 'darUbicacion') {
 
             documentNumber = parseInt(input);
@@ -181,7 +154,7 @@ function subFlow() {
         }
 
     } else if (user.state == 'darGracias' && existeAfiliado) {
-        
+
         existeAfiliado = false;
         message = messagesTosendRiesgo.newMessage('repetir', senderName);
         user = users.find(userValue => userValue.chatId == chatId);

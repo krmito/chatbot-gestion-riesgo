@@ -106,46 +106,18 @@ function subFlow() {
     if (users.find(function (userValue) { return userValue.chatId == chatId; }) && !fromMe) {
         //Ingresa l tipo de documento
         if (user.state == 'DescReporte') {
-            if (consultaRiesgo[0].find(function (response) { return utilities.isContain(input, response); }) || consultaRiesgo[1].find(function (response) { return utilities.isContain(input, response); }) || consultaRiesgo[2].find(function (response) { return utilities.isContain(input, response); })) {
-                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'cargarImagen';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-            else if (consultaRiesgo[2].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
-                myArray = [
-                    messagesTosendRiesgo.newMessage('despedida1', senderName),
-                    messagesTosendRiesgo.newMessage('despedida2', senderName)
-                ];
-                var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.body = randomMessage;
-                sendMessage(user, function (x) {
-                });
-                users.splice(users.indexOf(user), 1);
-            }
+            message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'cargarImagen';
+            user.body = message;
+            sendMessage(user, function (x) { });
         }
         else if (user.state == 'cargarImagen') {
-            if (tipoDocumento[0].find(function (response) { return utilities.isContain(input, response); }) || tipoDocumento[1].find(function (response) { return utilities.isContain(input, response); }) || tipoDocumento[2].find(function (response) { return utilities.isContain(input, response); })) {
-                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'darUbicacion';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-            else if (tipoDocumento[3].find(function (valueCancelar) { return utilities.isContain(input, valueCancelar); })) {
-                myArray = [
-                    messagesTosendRiesgo.newMessage('despedida1', senderName),
-                    messagesTosendRiesgo.newMessage('despedida2', senderName)
-                ];
-                var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.body = randomMessage;
-                sendMessage(user, function (x) {
-                });
-                users.splice(users.indexOf(user), 1);
-            }
+            message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'darUbicacion';
+            user.body = message;
+            sendMessage(user, function (x) { });
         }
         else if (user.state == 'darUbicacion') {
             documentNumber = parseInt(input);
