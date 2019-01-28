@@ -35,7 +35,7 @@ app.post('/my_webhook_url', function (req, res) {
         var phone = String(element.author).split('@')[0];
         var message = element.body;
         var messageToSend = '';
-        if (!element.fromMe && element.author != '573116902401@c.us') {
+        if (!element.fromMe && element.author != '573226458186@c.us') {
             phones.add(phone);
             if (phones.has(phone)) {
                 console.log('phonese', phones);
@@ -50,6 +50,7 @@ function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
     messageRE = messageRE.toLocaleLowerCase();
     var user = users.get(phoneRE);
     if (user == undefined) {
+        console.log("Entró papá");
         messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', userNameRE);
         user = new User_1.User(phoneRE, messageToSendRE, 'saludoInicial');
         users.set(phoneRE, user);

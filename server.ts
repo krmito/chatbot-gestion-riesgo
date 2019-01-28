@@ -40,7 +40,7 @@ app.post('/my_webhook_url', (req: any, res: any) => {
         let message = element.body;
         let messageToSend: string = '';
 
-        if (!element.fromMe && element.author != '573116902401@c.us') {
+        if (!element.fromMe && element.author != '573226458186@c.us') {
             phones.add(phone);
 
             if (phones.has(phone)) {
@@ -60,6 +60,8 @@ function manageUsers(messageRE: string, phoneRE: string, userNameRE: string, mes
     messageRE = messageRE.toLocaleLowerCase();
     let user = users.get(phoneRE);
     if (user == undefined) {
+        console.log("Entró papá");
+        
         messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', userNameRE);
         user = new User(phoneRE, messageToSendRE, 'saludoInicial');
         users.set(phoneRE, user);
