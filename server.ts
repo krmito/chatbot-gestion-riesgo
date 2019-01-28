@@ -193,7 +193,12 @@ function subFlow() {
                 categoriasRiesgo[7].find(response => utilities.isContain(input, response)) ||
                 categoriasRiesgo[8].find(response => utilities.isContain(input, response))) {
 
-                utilities.functionWithCallBack(message = messagesTosendRiesgo.newMessage('darGracias', senderName), 3000).then((res: any) => {
+                message = messagesTosendRiesgo.newMessage('darGracias', senderName);
+                user = users.find(userValue => userValue.chatId == chatId);
+                user.state = 'repetirRiesgo';
+                user.body = message;
+                
+                utilities.functionWithCallBack(sendMessage(user, (x: any) => { }), 3000).then((res: any) => {
                     message = messagesTosendRiesgo.newMessage('repetirRiesgo', senderName);
                     user = users.find(userValue => userValue.chatId == chatId);
                     user.state = 'repetirRiesgo';
