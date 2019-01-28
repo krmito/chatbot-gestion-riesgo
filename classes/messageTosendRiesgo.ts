@@ -7,9 +7,8 @@ let messageTosendRiesgo = {
             case 'saludoInicial':
                 mensaje = `Bienvenido *${userName}* a la línea de reporte de incidentes y 
             riesgos de la Alcaldía de Cali, cuentenos que quiere hacer:
-            
-        * Si quieres reportar un riesgo, escribe R o riesgo
-        * Si quieres consultar riesgos en tu zona, escribe C o Consulta`;
+* Si quieres reportar un riesgo, escribe R o riesgo
+* Si quieres consultar riesgos en tu zona, escribe C o Consulta`;
                 break;
             case 'DescReporte':
                 mensaje = `Por favor *${userName}* describe brevemente el riesgo que ves:`;

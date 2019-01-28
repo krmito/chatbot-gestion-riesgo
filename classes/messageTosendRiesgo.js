@@ -4,7 +4,7 @@ var messageTosendRiesgo = {
         var mensaje = '';
         switch (state) {
             case 'saludoInicial':
-                mensaje = "Bienvenido *" + userName + "* a la l\u00EDnea de reporte de incidentes y \n            riesgos de la Alcald\u00EDa de Cali, cuentenos que quiere hacer:\n            \n        * Si quieres reportar un riesgo, escribe R o riesgo\n        * Si quieres consultar riesgos en tu zona, escribe C o Consulta";
+                mensaje = "Bienvenido *" + userName + "* a la l\u00EDnea de reporte de incidentes y \n            riesgos de la Alcald\u00EDa de Cali, cuentenos que quiere hacer:\n* Si quieres reportar un riesgo, escribe R o riesgo\n* Si quieres consultar riesgos en tu zona, escribe C o Consulta";
                 break;
             case 'DescReporte':
                 mensaje = "Por favor *" + userName + "* describe brevemente el riesgo que ves:";
