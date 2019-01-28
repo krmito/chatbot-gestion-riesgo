@@ -4,8 +4,6 @@ import { User } from "./classes/User";
 import consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
 
 let app = require('express')();
-let FileReader = require('filereader');
-let File = require("file-class");
 let messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 let utilities = require("./classes/utilities");
 let constants = require("./classes/constants");
