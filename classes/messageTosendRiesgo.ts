@@ -5,7 +5,7 @@ let messageTosendRiesgo = {
 
         switch (state) {
             case 'saludoInicial':
-                mensaje = `Bienvenido *${userName}* a la linea de reporte de incidentes y 
+                mensaje = `Bienvenido *${userName}* a la línea de reporte de incidentes y 
             riesgos de la Alcaldía de Cali, cuentenos que quiere hacer:
             
         * Si quieres reportar un riesgo, escribe R o riesgo
@@ -15,13 +15,13 @@ let messageTosendRiesgo = {
                 mensaje = `Por favor *${userName}* describe brevemente el riesgo que ves:`;
                 break;
             case 'cargarImagen':
-                mensaje = `Por favor *${userName}*  envia una imagen del riesgo que ves`;
+                mensaje = `Por favor *${userName}*  envía una imagen del riesgo que ves`;
                 break;
             case 'darUbicacion':
-                mensaje = `Por favor  *${userName}*  envianos tu ubicacion`;
+                mensaje = `Por favor  *${userName}*  envianos tu ubicación`;
                 break;
             case 'darCategoria':
-                mensaje = `Por favor  *${userName}*  indica la categoria del riesgo:
+                mensaje = `Por favor  *${userName}*  indica la categoría del riesgo:
 
                 1. Rios, alcantarillado, canales de agua o inundaciones
                 2. Incendios
