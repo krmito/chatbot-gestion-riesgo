@@ -46,9 +46,7 @@ app.post('/my_webhook_url', function (req, res) {
     //servicioAfiliadoEPS.armaObjetos("CC", "1107063182")
     utilities.functionWithCallBack(checkMessage(), 1000).then(function (res) {
         console.log('res--------------------------------->', res);
-        if (res) {
-            subFlow();
-        }
+        subFlow();
     });
     res.sendStatus(200); //Response does not matter
 });

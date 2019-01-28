@@ -50,9 +50,8 @@ app.post('/my_webhook_url', (req, res) => {
 
     utilities.functionWithCallBack(checkMessage(), 1000).then((res: any) => {
         console.log('res--------------------------------->', res);
-        if (res) {
             subFlow();
-        }
+        
     });
     res.sendStatus(200); //Response does not matter
 });
