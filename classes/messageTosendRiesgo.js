@@ -28,4 +28,4 @@ var messageTosendRiesgo = {
         return mensaje;
     }
 };
-module.exports = messagesToSend;
+module.exports = messageTosendRiesgo;
