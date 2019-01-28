@@ -72,7 +72,7 @@ function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
             }
         });
     }
-    else if (user.state == 'DescReporte' && siga == true && messageRE.match(/([a-zA-Z])/g) || messageRE.match(/([0-9])/g)) {
+    else if (user.state == 'DescReporte' && siga == true && (messageRE.match(/([a-zA-Z])/g) || messageRE.match(/([0-9])/g))) {
         messageToSendRE = messageTosendRiesgo.newMessage('cargarImagen', userNameRE);
         user.state = 'cargarImagen';
         user.body = messageToSendRE;
@@ -82,7 +82,7 @@ function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
             }
         });
     }
-    else if (user.state == 'cargarImagen') {
+    else if (user.state == 'cargarImagen' && siga) {
         if (messageRE.match(/([.])*\.(?:jpg|gif|png|jpeg)/g)) {
             messageToSendRE = messageTosendRiesgo.newMessage('darUbicacion', userNameRE);
             user.state = 'darUbicacion';
