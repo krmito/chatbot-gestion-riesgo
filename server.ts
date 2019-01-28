@@ -268,57 +268,57 @@ function subFlow() {
             }
         }
     }
+}
 
-
-    function sendMessage(data: any, callback: any) {
-        request({
-            url: url,
-            method: "POST",
-            json: data
-        }, function (err, data, response) {
-            if (response.sent) {
-                callback(data);
-            }
-        });
-    }
-
-    function availableDates() {
-        switch (mes) {
-            case 0: { mesString = 'January' } break;
-            case 1: { mesString = 'February' } break;
-            case 2: { mesString = 'March' } break;
-            case 3: { mesString = 'April' } break;
-            case 4: { mesString = 'May' } break;
-            case 5: { mesString = 'June' } break;
-            case 6: { mesString = 'July' } break;
-            case 7: { mesString = 'August' } break;
-            case 8: { mesString = 'September' } break;
-            case 9: { mesString = 'October' } break;
-            case 10: { mesString = 'November' } break;
-            case 11: { mesString = 'December' } break;
+function sendMessage(data: any, callback: any) {
+    request({
+        url: url,
+        method: "POST",
+        json: data
+    }, function (err, data, response) {
+        if (response.sent) {
+            callback(data);
         }
-
-        let diasDisponibles = fechaActual.getDay();
-        let contador = 0;
-        /// ESTO ES EN CASO DE QUE EL HORARIO DE ATENFCIÓN SEA DE LUNES A VIERNES, EN CAOS DE QUE SE VA ATENDER FINES DE SEMANA HAY QUE HACER ALGO ADICIONAL
-        for (let i = diasDisponibles; i <= 5; i++) {
-            if (i == diasDisponibles) {
-                arregloDias.push({ "text": 'Hoy ' + utilities.diaSemana(dia, mesString, anio) + ' ' + dia + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
-            } else if (i > diasDisponibles) {
-                arregloDias.push({ "text": utilities.diaSemana(dia + contador, mesString, anio) + ' ' + (dia + contador) + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
-            }
-            contador++;
-        }
-    }
-
-    /* function consultarServicio(tipo: string, cedula: number) {
-        consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, (x: any) => {
-            datos = x;
-        });
-    } */
-
-    let server = app.listen(process.env.PORT, function () {
-        let host = server.address().address;
-        let port = server.address().port;
-        console.log("El servidor se encuentra en el puerto " + port + " y el host es " + host);
     });
+}
+
+function availableDates() {
+    switch (mes) {
+        case 0: { mesString = 'January' } break;
+        case 1: { mesString = 'February' } break;
+        case 2: { mesString = 'March' } break;
+        case 3: { mesString = 'April' } break;
+        case 4: { mesString = 'May' } break;
+        case 5: { mesString = 'June' } break;
+        case 6: { mesString = 'July' } break;
+        case 7: { mesString = 'August' } break;
+        case 8: { mesString = 'September' } break;
+        case 9: { mesString = 'October' } break;
+        case 10: { mesString = 'November' } break;
+        case 11: { mesString = 'December' } break;
+    }
+
+    let diasDisponibles = fechaActual.getDay();
+    let contador = 0;
+    /// ESTO ES EN CASO DE QUE EL HORARIO DE ATENFCIÓN SEA DE LUNES A VIERNES, EN CAOS DE QUE SE VA ATENDER FINES DE SEMANA HAY QUE HACER ALGO ADICIONAL
+    for (let i = diasDisponibles; i <= 5; i++) {
+        if (i == diasDisponibles) {
+            arregloDias.push({ "text": 'Hoy ' + utilities.diaSemana(dia, mesString, anio) + ' ' + dia + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
+        } else if (i > diasDisponibles) {
+            arregloDias.push({ "text": utilities.diaSemana(dia + contador, mesString, anio) + ' ' + (dia + contador) + '/' + (fechaActual.getMonth() + 1) + '/' + anio });
+        }
+        contador++;
+    }
+}
+
+/* function consultarServicio(tipo: string, cedula: number) {
+    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, (x: any) => {
+        datos = x;
+    });
+} */
+
+let server = app.listen(process.env.PORT, function () {
+    let host = server.address().address;
+    let port = server.address().port;
+    console.log("El servidor se encuentra en el puerto " + port + " y el host es " + host);
+});
