@@ -7,7 +7,7 @@ var consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
 var app = require('express')();
 var messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
-var constants = require("./classes/constants");
+var constants = require("./classes/constantes");
 var url = 'https://eu11.chat-api.com/instance20204/sendMessage?token=linoijx5h4glyl4b';
 var urlFile = 'https://eu11.chat-api.com/instance20204/sendFile?token=linoijx5h4glyl4b';
 var pdfFileUrl = 'https://botfacebookredinson.herokuapp.com/saludo';

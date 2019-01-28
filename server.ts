@@ -6,7 +6,7 @@ import consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
 let app = require('express')();
 let messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 let utilities = require("./classes/utilities");
-let constants = require("./classes/constants");
+let constants = require("./classes/constantes");
 let url: string = 'https://eu11.chat-api.com/instance20204/sendMessage?token=linoijx5h4glyl4b';
 let urlFile: string = 'https://eu11.chat-api.com/instance20204/sendFile?token=linoijx5h4glyl4b';
 let pdfFileUrl: string = 'https://botfacebookredinson.herokuapp.com/saludo';
