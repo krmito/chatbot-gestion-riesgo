@@ -61,11 +61,14 @@ function manageUsers(messageRE: string, phoneRE: string, userNameRE: string, mes
     let user = users.get(phoneRE);
     if (user == undefined) {
         console.log("Entró papá");
-        
+
         messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', userNameRE);
         user = new User(phoneRE, messageToSendRE, 'saludoInicial');
+        console.log(phoneRE);
+        
         users.set(phoneRE, user);
         sendMessage(user).then(res => {
+            console.log("Res: " + res);
 
             if (res) {
                 siga = true;
@@ -206,7 +209,7 @@ function manageUsers(messageRE: string, phoneRE: string, userNameRE: string, mes
 
     } else if (user.state == 'despedida1' && siga == true && constants.si.find((valueSaludo1: any) => utilities.isContain(messageRE, valueSaludo1))) {
         byeMessage(phoneRE, userNameRE, messageRE);
-    } 
+    }
 }
 
 function byeMessage(phoneRE: string, userNameRE: string, messageRE: string) {

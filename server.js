@@ -53,8 +53,10 @@ function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
         console.log("Entró papá");
         messageToSendRE = messageTosendRiesgo.newMessage('saludoInicial', userNameRE);
         user = new User_1.User(phoneRE, messageToSendRE, 'saludoInicial');
+        console.log(phoneRE);
         users.set(phoneRE, user);
         sendMessage(user).then(function (res) {
+            console.log("Res: " + res);
             if (res) {
                 siga = true;
             }

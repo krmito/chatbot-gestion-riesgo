@@ -1,5 +1,5 @@
 let messageTosendRiesgo = {
-    newMessage: function (state: string, userName: string, dia?: string, hora?: string, x?: string, objecto?: any, correo?: string) {
+    newMessage: function (state: string, userName: string) {
         let mensaje = '';
 
 
