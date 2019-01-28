@@ -1,7 +1,7 @@
 "use strict";
 var constantes = {
-    reporteRiesgo: [["r", "riesgo"]],
-    consultaRiesgo: [["c", "consulta"]],
+    reporteRiesgo: ["r", "riesgo"],
+    consultaRiesgo: ["c", "consulta"],
     saludosInicial: ["hola", "ola", "buena tarde", "buen dia", "buena noche", "qhubo"],
     tipoDocumento: [["1", "cédula de ciudadanía"], ["2", "pasaporte"], ["3", "tarjeta de identidad"], ["4", "cancelar"]],
     horasDisponibles: ["8:00", "9:00", "3:30", "4:20", "cancelar"],
