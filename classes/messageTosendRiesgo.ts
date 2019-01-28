@@ -6,7 +6,7 @@ let messageTosendRiesgo = {
         switch (state) {
             case 'saludoInicial':
                 mensaje = `Bienvenido *${userName}* a la línea de reporte de incidentes y 
-            riesgos de la Alcaldía de Cali, cuentenos que quiere hacer:
+riesgos de la Alcaldía de Cali, cuentenos que quiere hacer:
 * Si quieres reportar un riesgo, escribe R o riesgo
 * Si quieres consultar riesgos en tu zona, escribe C o Consulta`;
                 break;
@@ -21,16 +21,15 @@ let messageTosendRiesgo = {
                 break;
             case 'darCategoria':
                 mensaje = `Por favor  *${userName}*  indica la categoría del riesgo:
-
-                1. Rios, alcantarillado, canales de agua o inundaciones
-                2. Incendios
-                3. Invasión en zonas no permitidas
-                4. Energía, cableado, Postes de luz, telefonía o Televisión
-                5. Edificicaciones, viviendas, calles o estructuras en mal estado
-                6. Accidentes de tránsito, problemas de salud 
-                7. Seguridad y justicia, robos, riñas o atentados.
-                8. Deslizamientos de tierra, sismos
-                9. Otros`;
+1. Rios, alcantarillado, canales de agua o inundaciones
+2. Incendios
+3. Invasión en zonas no permitidas
+4. Energía, cableado, Postes de luz, telefonía o Televisión
+5. Edificicaciones, viviendas, calles o estructuras en mal estado
+6. Accidentes de tránsito, problemas de salud 
+7. Seguridad y justicia, robos, riñas o atentados.
+8. Deslizamientos de tierra, sismos
+9. Otros`;
                 break;
             case 'darGracias':
                 mensaje = `Gracias  *${userName}*  por reportar el evento, de inmediato avisaremos a las autoridades competentes.`;

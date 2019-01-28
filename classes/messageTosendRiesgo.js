@@ -4,7 +4,7 @@ var messageTosendRiesgo = {
         var mensaje = '';
         switch (state) {
             case 'saludoInicial':
-                mensaje = "Bienvenido *" + userName + "* a la l\u00EDnea de reporte de incidentes y \n            riesgos de la Alcald\u00EDa de Cali, cuentenos que quiere hacer:\n* Si quieres reportar un riesgo, escribe R o riesgo\n* Si quieres consultar riesgos en tu zona, escribe C o Consulta";
+                mensaje = "Bienvenido *" + userName + "* a la l\u00EDnea de reporte de incidentes y \nriesgos de la Alcald\u00EDa de Cali, cuentenos que quiere hacer:\n* Si quieres reportar un riesgo, escribe R o riesgo\n* Si quieres consultar riesgos en tu zona, escribe C o Consulta";
                 break;
             case 'DescReporte':
                 mensaje = "Por favor *" + userName + "* describe brevemente el riesgo que ves:";
@@ -16,7 +16,7 @@ var messageTosendRiesgo = {
                 mensaje = "Por favor  *" + userName + "*  envianos tu ubicaci\u00F3n";
                 break;
             case 'darCategoria':
-                mensaje = "Por favor  *" + userName + "*  indica la categor\u00EDa del riesgo:\n\n                1. Rios, alcantarillado, canales de agua o inundaciones\n                2. Incendios\n                3. Invasi\u00F3n en zonas no permitidas\n                4. Energ\u00EDa, cableado, Postes de luz, telefon\u00EDa o Televisi\u00F3n\n                5. Edificicaciones, viviendas, calles o estructuras en mal estado\n                6. Accidentes de tr\u00E1nsito, problemas de salud \n                7. Seguridad y justicia, robos, ri\u00F1as o atentados.\n                8. Deslizamientos de tierra, sismos\n                9. Otros";
+                mensaje = "Por favor  *" + userName + "*  indica la categor\u00EDa del riesgo:\n1. Rios, alcantarillado, canales de agua o inundaciones\n2. Incendios\n3. Invasi\u00F3n en zonas no permitidas\n4. Energ\u00EDa, cableado, Postes de luz, telefon\u00EDa o Televisi\u00F3n\n5. Edificicaciones, viviendas, calles o estructuras en mal estado\n6. Accidentes de tr\u00E1nsito, problemas de salud \n7. Seguridad y justicia, robos, ri\u00F1as o atentados.\n8. Deslizamientos de tierra, sismos\n9. Otros";
                 break;
             case 'darGracias':
                 mensaje = "Gracias  *" + userName + "*  por reportar el evento, de inmediato avisaremos a las autoridades competentes.";
