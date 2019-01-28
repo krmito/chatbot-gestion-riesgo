@@ -2,12 +2,11 @@ import express = require('express');
 import bodyParser = require('body-parser');
 import request = require('request');
 import { User } from "./classes/User";
-import consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
-let messagesToSend = require("./classes/messagesToSend");
+let messagesTosendRiesgo = require("./classes/messageTosendRiesgo");
 let utilities = require("./classes/utilities");
 
 let app = express();
-let url: string = 'https://eu11.chat-api.com/instance20204/sendMessage?token=linoijx5h4glyl4b';
+let url: string = 'https://eu24.chat-api.com/instance23630/sendMessage?token=fhbjhwk1fvtfy2j4';
 let users: Array<any> = [];
 let user: User;
 let data: any;
@@ -17,8 +16,8 @@ let day: string;
 let hour: string;
 let message: string;
 let saludosInicial: Array<string> = [];
-let inicial1: Array<string[]> = [];
-let inicial2: Array<string[]> = [];
+let reporteRiesgo: Array<string[]> = [];
+let consultaRiesgo: Array<string[]> = [];
 let tipoDocumento: Array<string[]> = [];
 let DiasDisponibles: Array<string> = [];
 let diasDisponibles: Array<string> = [];
@@ -61,11 +60,10 @@ app.post('/my_webhook_url', (req, res) => {
 
 function checkMessage() {
 
-    inicial1 = [["1", "cita", "citas"], ["2", "subsidios"], ["3", "afiliacion"], ["4", "certificados"], ["5", "cancelar"]];
-    inicial2 = [["1", "general"], ["2", "odontologia"], ["3", "cancelar"]];
+    reporteRiesgo = [["r", "riesgo"]];
+    consultaRiesgo = [["c", "consulta"]];
     saludosInicial = ["hola", "ola", "buena tarde", "buen dia", "buena noche", "qhubo"];
     tipoDocumento = [["1", "cédula de ciudadanía"], ["2", "pasaporte"], ["3", "tarjeta de identidad"], ["4", "cancelar"]];
-    /*  DiasDisponibles = ["martes", "miercoles", "jueves", "viernes", "cancelar"]; */
     horasDisponibles = ["8:00", "9:00", "3:30", "4:20", "cancelar"];
 
     data.messages.forEach((element: any) => {
@@ -73,33 +71,31 @@ function checkMessage() {
         input = input.toLocaleLowerCase().trim();
         senderName = element.senderName;
         chatId = element.chatId;
-        fromMe = element.fromMe
+        fromMe = element.fromMe 
     });
 
 
     console.log('users', users);
-    console.log('inicial1', inicial1[0])
     if (users.find(userValue => userValue.chatId == chatId) && !fromMe) {
         if (saludosInicial.find(valueSaludo1 => valueSaludo1 == input)) {
-            message = messagesToSend.newMessage('saludoInicial', senderName);
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'saludoInicial';
             user.body = message;
             sendMessage(user, (x: any) => { });
 
-        } else if (user.state == 'saludoInicial' && inicial1[0].find(valueCita => utilities.isContain(input, valueCita))) {
-            console.log('hey mans ');
+        } else if (user.state == 'saludoInicial' && reporteRiesgo[0].find(valueCita => utilities.isContain(input, valueCita))) {
             input = '';
-            message = messagesToSend.newMessage('inicial1', senderName);
+            message = messagesTosendRiesgo.newMessage('DescReporte', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
-            user.state = 'inicial1';
+            user.state = 'DescReporte';
             user.body = message;
             sendMessage(user, (x: any) => { });
 
-        } else if (user.state == 'saludoInicial' && inicial1[4].find(valueCancel => utilities.isContain(input, valueCancel))) {
+        } else if (user.state == 'saludoInicial' && reporteRiesgo[4].find(valueCancel => utilities.isContain(input, valueCancel))) {
             myArray = [
-                messagesToSend.newMessage('despedida1', senderName),
-                messagesToSend.newMessage('despedida2', senderName)
+                messagesTosendRiesgo.newMessage('despedida1', senderName),
+                messagesTosendRiesgo.newMessage('despedida2', senderName)
             ];
 
             let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
@@ -110,7 +106,7 @@ function checkMessage() {
             users.splice(users.indexOf(user), 1);
         }
     } else if (saludosInicial.find(valueSaludo2 => valueSaludo2 == input)) {
-        message = messagesToSend.newMessage('saludoInicial', senderName);
+        message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
         user = new User(chatId, message, 'saludoInicial')
         users.push(user);
         sendMessage(user, (x: any) => { });
@@ -120,19 +116,18 @@ function checkMessage() {
 function subFlow() {
     if (users.find(userValue => userValue.chatId == chatId) && !fromMe) {
         //Ingresa l tipo de documento
-        if (user.state == 'inicial1') {
-            if (inicial2[0].find(response => utilities.isContain(input, response)) || inicial2[1].find(response => utilities.isContain(input, response)) || inicial2[2].find(response => utilities.isContain(input, response))) {
+        if (user.state == 'DescReporte') {
+            if (consultaRiesgo[0].find(response => utilities.isContain(input, response)) || consultaRiesgo[1].find(response => utilities.isContain(input, response)) || consultaRiesgo[2].find(response => utilities.isContain(input, response))) {
 
-                console.log('Cant tell man');
-                message = messagesToSend.newMessage('inicial2', senderName);
+                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'inicial2';
+                user.state = 'cargarImagen';
                 user.body = message;
                 sendMessage(user, (x: any) => { });
-            } else if (inicial2[2].find(valueCancel => utilities.isContain(input, valueCancel))) {
+            } else if (consultaRiesgo[2].find(valueCancel => utilities.isContain(input, valueCancel))) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
 
                 let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
@@ -142,19 +137,18 @@ function subFlow() {
                 });
                 users.splice(users.indexOf(user), 1);
             }
-        } else if (user.state == 'inicial2') {
+        } else if (user.state == 'cargarImagen') {
             if (tipoDocumento[0].find(response => utilities.isContain(input, response)) || tipoDocumento[1].find(response => utilities.isContain(input, response)) || tipoDocumento[2].find(response => utilities.isContain(input, response))) {
 
-                console.log('Cant tell man');
-                message = messagesToSend.newMessage('citasSubFlow1', senderName);
+                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'citasSubFlow1';
+                user.state = 'darUbicacion';
                 user.body = message;
                 sendMessage(user, (x: any) => { });
             } else if (tipoDocumento[3].find(valueCancelar => utilities.isContain(input, valueCancelar))) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
 
                 let randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
@@ -165,142 +159,78 @@ function subFlow() {
                 users.splice(users.indexOf(user), 1);
 
             }
-        } else if (user.state == 'citasSubFlow1') {
-            console.log('this is happening');
-            if (input.match(/([^a-zA-Z])/g)) {
+        } else if (user.state == 'darUbicacion') {
 
-                documentNumber = parseInt(input);
-                console.log('Cant tell man');
-                message = messagesToSend.newMessage('citasSubFlow2', senderName);
+            documentNumber = parseInt(input);
+            message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'darCategoria';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
+
+        } else if (user.state == 'darCategoria') {
+
+            existeAfiliado = false;
+            message = messagesTosendRiesgo.newMessage('darGracias', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'darGracias';
+            user.body = message;
+            arregloDias = [];
+            sendMessage(user, (x: any) => { });
+
+        }
+
+    } else if (user.state == 'darGracias' && existeAfiliado) {
+        
+        existeAfiliado = false;
+        message = messagesTosendRiesgo.newMessage('repetir', senderName);
+        user = users.find(userValue => userValue.chatId == chatId);
+        user.state = 'repetir';
+        user.body = message;
+        arregloDias = [];
+        sendMessage(user, (x: any) => { });
+
+    } else if (user.state == 'eligeCita2' && existeAfiliado) {
+        horasDisponibles.forEach((element, indice2) => {
+            if (Number(indice2) == Number(input)) {
+                hour = horasDisponibles[indice2 - 1];
+
+                message = messagesTosendRiesgo.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
                 user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'citasSubFlow2';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-            } else {
-                console.log('HEY BRO!!!!!');
-
-                message = messagesToSend.newMessage('citasSubFlow1', senderName);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'citasSubFlow1';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-            }
-        } else if (user.state == 'citasSubFlow2') {
-            availableDates();
-            //Validda la fecha de expedición
-            if (input.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/g)) {
-                let availableDate: string = '';
-
-                arregloDias.forEach((element, index) => {
-                    console.log('heyy', index, element);
-                    index = index + 1;
-                    availableDate += '*' + index + '.' + element.text + '*' + "\n";
-                });
-
-                console.log('arregloDias ', arregloDias);
-
-                documentDate = input;
-
-                utilities.functionWithCallBack(consultarServicio("CC", documentNumber), 4000).then((res: any) => {
-
-                    console.log("BOOLENAO: ", JSON.parse(datos).responseMessageOut.body.response.consultaAfiliadoResponse.afiliado);
-                    if (JSON.parse(datos).responseMessageOut.body.response.consultaAfiliadoResponse.afiliado != undefined) {
-                        let afiliado = JSON.parse(datos).responseMessageOut.body.response.consultaAfiliadoResponse.afiliado;
-                        let calidadAfiliado = afiliado.calidadAfiliado;
-                        let fechaAfiliacion = afiliado.fechaAfiliacionSistema;
-                        let tipoAfiliado = afiliado.tipoAfiliado;
-                        correo = afiliado.email;
-
-                        let object = { calidad: calidadAfiliado, fecha: fechaAfiliacion, tipo: tipoAfiliado, };
-
-                        console.log("Existe");
-                        existeAfiliado = true;
-
-                        message = messagesToSend.newMessage('eligeCita1', senderName, '', '', availableDate, object, correo);
-                        user = users.find(userValue => userValue.chatId == chatId);
-                        user.state = 'eligeCita1';
-                        user.body = message;
-                        arregloDias = [];
-                        sendMessage(user, (x: any) => { });
-
-                    } else {
-                        existeAfiliado = false;
-                        message = messagesToSend.newMessage('citasSubFlow1', senderName);
-                        user = users.find(userValue => userValue.chatId == chatId);
-                        user.state = 'citasSubFlow1';
-                        user.body = message;
-                        arregloDias = [];
-                        sendMessage(user, (x: any) => { });
-
-                    }
-                });
-
-            } else {
-
-                message = messagesToSend.newMessage('docInvalidoFecha', senderName);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'citasSubFlow1';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-                arregloDias = [];
-            }
-        } else if (user.state == 'eligeCita1' && existeAfiliado) {
-            availableDates();
-            for (let indices = 0; indices < arregloDias.length; indices++) {
-                console.log('indices', indices);
-                console.log('arregloDias[indices]', arregloDias[indices]);
-                if (Number(indices) + 1 == Number(input)) {
-                    day = arregloDias[indices].text;
-                    console.log("ENTRÓÓÓÓÓÓÓÓÓÓÓ");
-
-                    message = messagesToSend.newMessage('eligeCita2', senderName, day);
-                    user = users.find(userValue => userValue.chatId == chatId);
-                    user.state = 'eligeCita2';
-                    user.body = message;
-                    sendMessage(user, (x: any) => { });
-                }
-            }
-        } else if (user.state == 'eligeCita2' && existeAfiliado) {
-            horasDisponibles.forEach((element, indice2) => {
-                if (Number(indice2) == Number(input)) {
-                    hour = horasDisponibles[indice2 - 1];
-
-                    message = messagesToSend.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
-                    user = users.find(userValue => userValue.chatId == chatId);
-                    user.state = 'eligeCita3';
-                    user.body = message;
-                    sendMessage(user, (x: any) => { });
-                }
-
-            });
-        } else if (user.state == 'eligeCita3' && existeAfiliado) {
-
-            if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-                message = messagesToSend.newMessage('despedida1', senderName);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'despedida1';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-            } else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
-                message = messagesToSend.newMessage('eligeCita1', senderName);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'eligeCita1';
+                user.state = 'eligeCita3';
                 user.body = message;
                 sendMessage(user, (x: any) => { });
             }
 
-        } else if (user.state == 'despedida1' && existeAfiliado) {
-            if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-                message = messagesToSend.newMessage('saludoInicial', senderName);
-                user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'saludoInicial';
-                user.body = message;
-                sendMessage(user, (x: any) => { });
-                users.push(user);
-            }
+        });
+    } else if (user.state == 'eligeCita3' && existeAfiliado) {
+
+        if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
+            message = messagesTosendRiesgo.newMessage('despedida1', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'despedida1';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
+        } else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
+            message = messagesTosendRiesgo.newMessage('eligeCita1', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'eligeCita1';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
+        }
+
+    } else if (user.state == 'despedida1' && existeAfiliado) {
+        if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'saludoInicial';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
+            users.push(user);
         }
     }
 }
+
 
 function sendMessage(data: any, callback: any) {
     request({
@@ -343,11 +273,11 @@ function availableDates() {
     }
 }
 
-function consultarServicio(tipo: string, cedula: number) {
+/* function consultarServicio(tipo: string, cedula: number) {
     consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, (x: any) => {
         datos = x;
     });
-}
+} */
 
 let server = app.listen(process.env.PORT, function () {
     let host = server.address().address;

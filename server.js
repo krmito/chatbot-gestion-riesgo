@@ -4,11 +4,10 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var request = require("request");
 var User_1 = require("./classes/User");
-var consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
-var messagesToSend = require("./classes/messagesToSend");
+var messagesTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
 var app = express();
-var url = 'https://eu11.chat-api.com/instance20204/sendMessage?token=linoijx5h4glyl4b';
+var url = 'https://eu24.chat-api.com/instance23630/sendMessage?token=fhbjhwk1fvtfy2j4';
 var users = [];
 var user;
 var data;
@@ -18,8 +17,8 @@ var day;
 var hour;
 var message;
 var saludosInicial = [];
-var inicial1 = [];
-var inicial2 = [];
+var reporteRiesgo = [];
+var consultaRiesgo = [];
 var tipoDocumento = [];
 var DiasDisponibles = [];
 var diasDisponibles = [];
@@ -54,11 +53,10 @@ app.post('/my_webhook_url', function (req, res) {
     res.sendStatus(200); //Response does not matter
 });
 function checkMessage() {
-    inicial1 = [["1", "cita", "citas"], ["2", "subsidios"], ["3", "afiliacion"], ["4", "certificados"], ["5", "cancelar"]];
-    inicial2 = [["1", "general"], ["2", "odontologia"], ["3", "cancelar"]];
+    reporteRiesgo = [["r", "riesgo"]];
+    consultaRiesgo = [["c", "consulta"]];
     saludosInicial = ["hola", "ola", "buena tarde", "buen dia", "buena noche", "qhubo"];
     tipoDocumento = [["1", "cédula de ciudadanía"], ["2", "pasaporte"], ["3", "tarjeta de identidad"], ["4", "cancelar"]];
-    /*  DiasDisponibles = ["martes", "miercoles", "jueves", "viernes", "cancelar"]; */
     horasDisponibles = ["8:00", "9:00", "3:30", "4:20", "cancelar"];
     data.messages.forEach(function (element) {
         input = element.body;
@@ -68,28 +66,26 @@ function checkMessage() {
         fromMe = element.fromMe;
     });
     console.log('users', users);
-    console.log('inicial1', inicial1[0]);
     if (users.find(function (userValue) { return userValue.chatId == chatId; }) && !fromMe) {
         if (saludosInicial.find(function (valueSaludo1) { return valueSaludo1 == input; })) {
-            message = messagesToSend.newMessage('saludoInicial', senderName);
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
             user.state = 'saludoInicial';
             user.body = message;
             sendMessage(user, function (x) { });
         }
-        else if (user.state == 'saludoInicial' && inicial1[0].find(function (valueCita) { return utilities.isContain(input, valueCita); })) {
-            console.log('hey mans ');
+        else if (user.state == 'saludoInicial' && reporteRiesgo[0].find(function (valueCita) { return utilities.isContain(input, valueCita); })) {
             input = '';
-            message = messagesToSend.newMessage('inicial1', senderName);
+            message = messagesTosendRiesgo.newMessage('DescReporte', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.state = 'inicial1';
+            user.state = 'DescReporte';
             user.body = message;
             sendMessage(user, function (x) { });
         }
-        else if (user.state == 'saludoInicial' && inicial1[4].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
+        else if (user.state == 'saludoInicial' && reporteRiesgo[4].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
             myArray = [
-                messagesToSend.newMessage('despedida1', senderName),
-                messagesToSend.newMessage('despedida2', senderName)
+                messagesTosendRiesgo.newMessage('despedida1', senderName),
+                messagesTosendRiesgo.newMessage('despedida2', senderName)
             ];
             var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
@@ -100,7 +96,7 @@ function checkMessage() {
         }
     }
     else if (saludosInicial.find(function (valueSaludo2) { return valueSaludo2 == input; })) {
-        message = messagesToSend.newMessage('saludoInicial', senderName);
+        message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
         user = new User_1.User(chatId, message, 'saludoInicial');
         users.push(user);
         sendMessage(user, function (x) { });
@@ -109,19 +105,18 @@ function checkMessage() {
 function subFlow() {
     if (users.find(function (userValue) { return userValue.chatId == chatId; }) && !fromMe) {
         //Ingresa l tipo de documento
-        if (user.state == 'inicial1') {
-            if (inicial2[0].find(function (response) { return utilities.isContain(input, response); }) || inicial2[1].find(function (response) { return utilities.isContain(input, response); }) || inicial2[2].find(function (response) { return utilities.isContain(input, response); })) {
-                console.log('Cant tell man');
-                message = messagesToSend.newMessage('inicial2', senderName);
+        if (user.state == 'DescReporte') {
+            if (consultaRiesgo[0].find(function (response) { return utilities.isContain(input, response); }) || consultaRiesgo[1].find(function (response) { return utilities.isContain(input, response); }) || consultaRiesgo[2].find(function (response) { return utilities.isContain(input, response); })) {
+                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'inicial2';
+                user.state = 'cargarImagen';
                 user.body = message;
                 sendMessage(user, function (x) { });
             }
-            else if (inicial2[2].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
+            else if (consultaRiesgo[2].find(function (valueCancel) { return utilities.isContain(input, valueCancel); })) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
                 var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
@@ -131,19 +126,18 @@ function subFlow() {
                 users.splice(users.indexOf(user), 1);
             }
         }
-        else if (user.state == 'inicial2') {
+        else if (user.state == 'cargarImagen') {
             if (tipoDocumento[0].find(function (response) { return utilities.isContain(input, response); }) || tipoDocumento[1].find(function (response) { return utilities.isContain(input, response); }) || tipoDocumento[2].find(function (response) { return utilities.isContain(input, response); })) {
-                console.log('Cant tell man');
-                message = messagesToSend.newMessage('citasSubFlow1', senderName);
+                message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'citasSubFlow1';
+                user.state = 'darUbicacion';
                 user.body = message;
                 sendMessage(user, function (x) { });
             }
             else if (tipoDocumento[3].find(function (valueCancelar) { return utilities.isContain(input, valueCancelar); })) {
                 myArray = [
-                    messagesToSend.newMessage('despedida1', senderName),
-                    messagesToSend.newMessage('despedida2', senderName)
+                    messagesTosendRiesgo.newMessage('despedida1', senderName),
+                    messagesTosendRiesgo.newMessage('despedida2', senderName)
                 ];
                 var randomMessage = myArray[Math.floor(Math.random() * myArray.length)];
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
@@ -153,129 +147,69 @@ function subFlow() {
                 users.splice(users.indexOf(user), 1);
             }
         }
-        else if (user.state == 'citasSubFlow1') {
-            console.log('this is happening');
-            if (input.match(/([^a-zA-Z])/g)) {
-                documentNumber = parseInt(input);
-                console.log('Cant tell man');
-                message = messagesToSend.newMessage('citasSubFlow2', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'citasSubFlow2';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
-            else {
-                console.log('HEY BRO!!!!!');
-                message = messagesToSend.newMessage('citasSubFlow1', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'citasSubFlow1';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
+        else if (user.state == 'darUbicacion') {
+            documentNumber = parseInt(input);
+            message = messagesTosendRiesgo.newMessage('darCategoria', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'darCategoria';
+            user.body = message;
+            sendMessage(user, function (x) { });
         }
-        else if (user.state == 'citasSubFlow2') {
-            availableDates();
-            //Validda la fecha de expedición
-            if (input.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/g)) {
-                var availableDate_1 = '';
-                arregloDias.forEach(function (element, index) {
-                    console.log('heyy', index, element);
-                    index = index + 1;
-                    availableDate_1 += '*' + index + '.' + element.text + '*' + "\n";
-                });
-                console.log('arregloDias ', arregloDias);
-                documentDate = input;
-                utilities.functionWithCallBack(consultarServicio("CC", documentNumber), 4000).then(function (res) {
-                    console.log("BOOLENAO: ", JSON.parse(datos).responseMessageOut.body.response.consultaAfiliadoResponse.afiliado);
-                    if (JSON.parse(datos).responseMessageOut.body.response.consultaAfiliadoResponse.afiliado != undefined) {
-                        var afiliado = JSON.parse(datos).responseMessageOut.body.response.consultaAfiliadoResponse.afiliado;
-                        var calidadAfiliado = afiliado.calidadAfiliado;
-                        var fechaAfiliacion = afiliado.fechaAfiliacionSistema;
-                        var tipoAfiliado = afiliado.tipoAfiliado;
-                        correo = afiliado.email;
-                        var object = { calidad: calidadAfiliado, fecha: fechaAfiliacion, tipo: tipoAfiliado, };
-                        console.log("Existe");
-                        existeAfiliado = true;
-                        message = messagesToSend.newMessage('eligeCita1', senderName, '', '', availableDate_1, object, correo);
-                        user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                        user.state = 'eligeCita1';
-                        user.body = message;
-                        arregloDias = [];
-                        sendMessage(user, function (x) { });
-                    }
-                    else {
-                        existeAfiliado = false;
-                        message = messagesToSend.newMessage('citasSubFlow1', senderName);
-                        user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                        user.state = 'citasSubFlow1';
-                        user.body = message;
-                        arregloDias = [];
-                        sendMessage(user, function (x) { });
-                    }
-                });
-            }
-            else {
-                message = messagesToSend.newMessage('docInvalidoFecha', senderName);
+        else if (user.state == 'darCategoria') {
+            existeAfiliado = false;
+            message = messagesTosendRiesgo.newMessage('darGracias', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'darGracias';
+            user.body = message;
+            arregloDias = [];
+            sendMessage(user, function (x) { });
+        }
+    }
+    else if (user.state == 'darGracias' && existeAfiliado) {
+        existeAfiliado = false;
+        message = messagesTosendRiesgo.newMessage('repetir', senderName);
+        user = users.find(function (userValue) { return userValue.chatId == chatId; });
+        user.state = 'repetir';
+        user.body = message;
+        arregloDias = [];
+        sendMessage(user, function (x) { });
+    }
+    else if (user.state == 'eligeCita2' && existeAfiliado) {
+        horasDisponibles.forEach(function (element, indice2) {
+            if (Number(indice2) == Number(input)) {
+                hour = horasDisponibles[indice2 - 1];
+                message = messagesTosendRiesgo.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'citasSubFlow1';
-                user.body = message;
-                sendMessage(user, function (x) { });
-                arregloDias = [];
-            }
-        }
-        else if (user.state == 'eligeCita1' && existeAfiliado) {
-            availableDates();
-            for (var indices = 0; indices < arregloDias.length; indices++) {
-                console.log('indices', indices);
-                console.log('arregloDias[indices]', arregloDias[indices]);
-                if (Number(indices) + 1 == Number(input)) {
-                    day = arregloDias[indices].text;
-                    console.log("ENTRÓÓÓÓÓÓÓÓÓÓÓ");
-                    message = messagesToSend.newMessage('eligeCita2', senderName, day);
-                    user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                    user.state = 'eligeCita2';
-                    user.body = message;
-                    sendMessage(user, function (x) { });
-                }
-            }
-        }
-        else if (user.state == 'eligeCita2' && existeAfiliado) {
-            horasDisponibles.forEach(function (element, indice2) {
-                if (Number(indice2) == Number(input)) {
-                    hour = horasDisponibles[indice2 - 1];
-                    message = messagesToSend.newMessage('eligeCita3', senderName, day, hour, '', '', correo);
-                    user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                    user.state = 'eligeCita3';
-                    user.body = message;
-                    sendMessage(user, function (x) { });
-                }
-            });
-        }
-        else if (user.state == 'eligeCita3' && existeAfiliado) {
-            if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-                message = messagesToSend.newMessage('despedida1', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'despedida1';
+                user.state = 'eligeCita3';
                 user.body = message;
                 sendMessage(user, function (x) { });
             }
-            else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
-                message = messagesToSend.newMessage('eligeCita1', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'eligeCita1';
-                user.body = message;
-                sendMessage(user, function (x) { });
-            }
+        });
+    }
+    else if (user.state == 'eligeCita3' && existeAfiliado) {
+        if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
+            message = messagesTosendRiesgo.newMessage('despedida1', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'despedida1';
+            user.body = message;
+            sendMessage(user, function (x) { });
         }
-        else if (user.state == 'despedida1' && existeAfiliado) {
-            if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
-                message = messagesToSend.newMessage('saludoInicial', senderName);
-                user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'saludoInicial';
-                user.body = message;
-                sendMessage(user, function (x) { });
-                users.push(user);
-            }
+        else if (Number(input.match(/([^a-zA-Z])/g)) == 2) {
+            message = messagesTosendRiesgo.newMessage('eligeCita1', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'eligeCita1';
+            user.body = message;
+            sendMessage(user, function (x) { });
+        }
+    }
+    else if (user.state == 'despedida1' && existeAfiliado) {
+        if (Number(input.match(/([^a-zA-Z])/g)) == 1) {
+            message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'saludoInicial';
+            user.body = message;
+            sendMessage(user, function (x) { });
+            users.push(user);
         }
     }
 }
@@ -366,11 +300,11 @@ function availableDates() {
         contador++;
     }
 }
-function consultarServicio(tipo, cedula) {
-    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, function (x) {
+/* function consultarServicio(tipo: string, cedula: number) {
+    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, (x: any) => {
         datos = x;
     });
-}
+} */
 var server = app.listen(process.env.PORT, function () {
     var host = server.address().address;
     var port = server.address().port;
