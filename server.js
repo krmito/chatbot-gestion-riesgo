@@ -65,7 +65,7 @@ function checkMessage() {
         ["4", "Energía", "cableado", "Postes de luz", "telefonía", "Televisión"],
         ["5", "Edificicaciones", "viviendas", "calles", "estructuras en mal estado"],
         ["6", "Accidentes de tránsito", "problemas de salud"],
-        ["7", "Seguridad y justicia", "robos", "riñas", "atentados".],
+        ["7", "Seguridad y justicia", "robos", "riñas", "atentados"],
         ["8", "Deslizamientos de tierra", "sismos"],
         ["9", "otros"]
     ];
