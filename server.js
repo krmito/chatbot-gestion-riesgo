@@ -105,6 +105,7 @@ function checkMessage() {
 function subFlow() {
     if (users.find(function (userValue) { return userValue.chatId == chatId; }) && !fromMe) {
         //Ingresa l tipo de documento
+        console.log("Ingresó aquí");
         if (user.state == 'DescReporte') {
             message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });

@@ -116,6 +116,8 @@ function checkMessage() {
 function subFlow() {
     if (users.find(userValue => userValue.chatId == chatId) && !fromMe) {
         //Ingresa l tipo de documento
+        console.log("Ingresó aquí");
+        
         if (user.state == 'DescReporte') {
 
             message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
@@ -125,7 +127,7 @@ function subFlow() {
             sendMessage(user, (x: any) => { });
 
         } else if (user.state == 'cargarImagen') {
-            
+
             message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
             user = users.find(userValue => userValue.chatId == chatId);
             user.state = 'darUbicacion';
