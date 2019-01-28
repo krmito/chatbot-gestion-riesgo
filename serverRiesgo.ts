@@ -6,7 +6,7 @@ let messagesToSend = require("./classes/messagesTosendRiesgo");
 let utilities = require("./classes/utilities");
 
 let app = express();
-let url: string = 'https://eu17.chat-api.com/instance20731/sendMessage?token=fyjnhn48zfqfz3p0';
+let url: string = 'https://eu24.chat-api.com/instance23630/sendMessage?token=fhbjhwk1fvtfy2j4';
 let users: Array<any> = [];
 let user: User;
 let data: any;
