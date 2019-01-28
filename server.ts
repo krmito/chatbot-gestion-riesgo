@@ -50,8 +50,8 @@ app.post('/my_webhook_url', (req, res) => {
 
     utilities.functionWithCallBack(checkMessage(), 1000).then((res: any) => {
         console.log('res--------------------------------->', res);
-            subFlow();
-        
+        subFlow();
+
     });
     res.sendStatus(200); //Response does not matter
 });
@@ -116,14 +116,17 @@ function subFlow() {
     if (users.find(userValue => userValue.chatId == chatId) && !fromMe) {
         //Ingresa l tipo de documento
         console.log("Ingresó aquí");
-        
+
         if (user.state == 'DescReporte') {
 
-            message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
-            user = users.find(userValue => userValue.chatId == chatId);
-            user.state = 'cargarImagen';
-            user.body = message;
-            sendMessage(user, (x: any) => { });
+            if (input.match(/([a-zA-Z])/g)) {
+
+                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
+                user = users.find(userValue => userValue.chatId == chatId);
+                user.state = 'cargarImagen';
+                user.body = message;
+                sendMessage(user, (x: any) => { });
+            }
 
         } else if (user.state == 'cargarImagen') {
 

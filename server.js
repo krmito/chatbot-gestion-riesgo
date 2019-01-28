@@ -105,11 +105,13 @@ function subFlow() {
         //Ingresa l tipo de documento
         console.log("Ingresó aquí");
         if (user.state == 'DescReporte') {
-            message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
-            user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.state = 'cargarImagen';
-            user.body = message;
-            sendMessage(user, function (x) { });
+            if (input.match(/([a-zA-Z])/g)) {
+                message = messagesTosendRiesgo.newMessage('cargarImagen', senderName);
+                user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                user.state = 'cargarImagen';
+                user.body = message;
+                sendMessage(user, function (x) { });
+            }
         }
         else if (user.state == 'cargarImagen') {
             message = messagesTosendRiesgo.newMessage('darUbicacion', senderName);
