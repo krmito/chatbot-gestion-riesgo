@@ -37,9 +37,10 @@ let correo: string;
 let existeAfiliado: boolean;
 
 let horasDisponibles: Array<string> = [];
+let categoriasRiesgo: Array<string[]> = [];
 let arregloDias: Array<any> = [];
 let myArray: Array<any> = [];
-
+let repetir: Array<string> = [];
 app.use(bodyParser.json());
 
 app.post('/my_webhook_url', (req, res) => {
@@ -64,6 +65,18 @@ function checkMessage() {
     saludosInicial = ["hola", "ola", "buena tarde", "buen dia", "buena noche", "qhubo"];
     tipoDocumento = [["1", "cédula de ciudadanía"], ["2", "pasaporte"], ["3", "tarjeta de identidad"], ["4", "cancelar"]];
     horasDisponibles = ["8:00", "9:00", "3:30", "4:20", "cancelar"];
+    categoriasRiesgo = [
+        ["1", "Rios", "alcantarillado", "canales de agua", "inundaciones"],
+        ["2", "Incendios"],
+        ["3", "Invasión en zonas no permitidas", "invasin", "invasion"],
+        ["4", "Energía", "cableado", "Postes de luz", "telefonía", "Televisión"],
+        ["5", "Edificicaciones", "viviendas", "calles", "estructuras en mal estado"],
+        ["6", "Accidentes de tránsito", "problemas de salud"],
+        ["7", "Seguridad y justicia", "robos", "riñas", "atentados".],
+        ["8", "Deslizamientos de tierra", "sismos"],
+        ["9", "otros"]
+    ];
+    repetir = ["si", "no"];
 
     data.messages.forEach((element: any) => {
         input = element.body;
@@ -167,26 +180,32 @@ function subFlow() {
 
         } else if (user.state == 'darCategoria') {
 
-            existeAfiliado = false;
-            message = messagesTosendRiesgo.newMessage('darGracias', senderName);
-            user = users.find(userValue => userValue.chatId == chatId);
-            user.state = 'darGracias';
-            user.body = message;
-            arregloDias = [];
-            sendMessage(user, (x: any) => { });
-
+            categoriasRiesgo.forEach((element, index) => {
+                if (categoriasRiesgo[index].find(response => utilities.isContain(input, response))) {
+                    console.log(element);
+                    message = messagesTosendRiesgo.newMessage('darGracias', senderName);
+                    user = users.find(userValue => userValue.chatId == chatId);
+                    user.state = 'darGracias';
+                    user.body = message;
+                    sendMessage(user, (x: any) => { });
+                } else {
+                    message = messagesTosendRiesgo.newMessage('cateValida', senderName);
+                    user = users.find(userValue => userValue.chatId == chatId);
+                    user.state = 'darCategoria';
+                    user.body = message;
+                    sendMessage(user, (x: any) => { });
+                }
+            });
         }
 
-    } else if (user.state == 'darGracias' && existeAfiliado) {
-
-        existeAfiliado = false;
-        message = messagesTosendRiesgo.newMessage('repetir', senderName);
-        user = users.find(userValue => userValue.chatId == chatId);
-        user.state = 'repetir';
-        user.body = message;
-        arregloDias = [];
-        sendMessage(user, (x: any) => { });
-
+    } else if (user.state == 'darGracias') {
+        if (repetir.find(valueRepetir => valueRepetir == input)) {
+            message = messagesTosendRiesgo.newMessage('repetir', senderName);
+            user = users.find(userValue => userValue.chatId == chatId);
+            user.state = 'repetir';
+            user.body = message;
+            sendMessage(user, (x: any) => { });
+        }
     } else if (user.state == 'eligeCita2' && existeAfiliado) {
         horasDisponibles.forEach((element, indice2) => {
             if (Number(indice2) == Number(input)) {

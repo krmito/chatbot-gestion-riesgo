@@ -45,6 +45,9 @@ let messageTosendRiesgo = {
             case 'ubicacionValida':
                 mensaje = ` ${userName}, ingresa una ubicación válida`;
                 break;
+            case 'cateValida':
+                mensaje = ` ${userName}, ingresa una categoría válida`;
+                break;
         }
         return mensaje;
     }

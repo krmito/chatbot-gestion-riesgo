@@ -37,8 +37,10 @@ var mesString;
 var correo;
 var existeAfiliado;
 var horasDisponibles = [];
+var categoriasRiesgo = [];
 var arregloDias = [];
 var myArray = [];
+var repetir = [];
 app.use(bodyParser.json());
 app.post('/my_webhook_url', function (req, res) {
     data = req.body; // New messages in the "body" variable
@@ -56,6 +58,18 @@ function checkMessage() {
     saludosInicial = ["hola", "ola", "buena tarde", "buen dia", "buena noche", "qhubo"];
     tipoDocumento = [["1", "cédula de ciudadanía"], ["2", "pasaporte"], ["3", "tarjeta de identidad"], ["4", "cancelar"]];
     horasDisponibles = ["8:00", "9:00", "3:30", "4:20", "cancelar"];
+    categoriasRiesgo = [
+        ["1", "Rios", "alcantarillado", "canales de agua", "inundaciones"],
+        ["2", "Incendios"],
+        ["3", "Invasión en zonas no permitidas", "invasin", "invasion"],
+        ["4", "Energía", "cableado", "Postes de luz", "telefonía", "Televisión"],
+        ["5", "Edificicaciones", "viviendas", "calles", "estructuras en mal estado"],
+        ["6", "Accidentes de tránsito", "problemas de salud"],
+        ["7", "Seguridad y justicia", "robos", "riñas", "atentados".],
+        ["8", "Deslizamientos de tierra", "sismos"],
+        ["9", "otros"]
+    ];
+    repetir = ["si", "no"];
     data.messages.forEach(function (element) {
         input = element.body;
         input = input.toLocaleLowerCase().trim();
@@ -147,23 +161,33 @@ function subFlow() {
             }
         }
         else if (user.state == 'darCategoria') {
-            existeAfiliado = false;
-            message = messagesTosendRiesgo.newMessage('darGracias', senderName);
-            user = users.find(function (userValue) { return userValue.chatId == chatId; });
-            user.state = 'darGracias';
-            user.body = message;
-            arregloDias = [];
-            sendMessage(user, function (x) { });
+            categoriasRiesgo.forEach(function (element, index) {
+                if (categoriasRiesgo[index].find(function (response) { return utilities.isContain(input, response); })) {
+                    console.log(element);
+                    message = messagesTosendRiesgo.newMessage('darGracias', senderName);
+                    user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                    user.state = 'darGracias';
+                    user.body = message;
+                    sendMessage(user, function (x) { });
+                }
+                else {
+                    message = messagesTosendRiesgo.newMessage('cateValida', senderName);
+                    user = users.find(function (userValue) { return userValue.chatId == chatId; });
+                    user.state = 'darCategoria';
+                    user.body = message;
+                    sendMessage(user, function (x) { });
+                }
+            });
         }
     }
-    else if (user.state == 'darGracias' && existeAfiliado) {
-        existeAfiliado = false;
-        message = messagesTosendRiesgo.newMessage('repetir', senderName);
-        user = users.find(function (userValue) { return userValue.chatId == chatId; });
-        user.state = 'repetir';
-        user.body = message;
-        arregloDias = [];
-        sendMessage(user, function (x) { });
+    else if (user.state == 'darGracias') {
+        if (repetir.find(function (valueRepetir) { return valueRepetir == input; })) {
+            message = messagesTosendRiesgo.newMessage('repetir', senderName);
+            user = users.find(function (userValue) { return userValue.chatId == chatId; });
+            user.state = 'repetir';
+            user.body = message;
+            sendMessage(user, function (x) { });
+        }
     }
     else if (user.state == 'eligeCita2' && existeAfiliado) {
         horasDisponibles.forEach(function (element, indice2) {

@@ -30,6 +30,9 @@ var messageTosendRiesgo = {
             case 'ubicacionValida':
                 mensaje = " " + userName + ", ingresa una ubicaci\u00F3n v\u00E1lida";
                 break;
+            case 'cateValida':
+                mensaje = " " + userName + ", ingresa una categor\u00EDa v\u00E1lida";
+                break;
         }
         return mensaje;
     }
