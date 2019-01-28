@@ -195,9 +195,9 @@ function subFlow() {
 
                 message = messagesTosendRiesgo.newMessage('darGracias', senderName);
                 user = users.find(userValue => userValue.chatId == chatId);
-                user.state = 'repetirRiesgo';
+                user.state = 'darGracias';
                 user.body = message;
-                
+
                 utilities.functionWithCallBack(sendMessage(user, (x: any) => { }), 3000).then((res: any) => {
                     message = messagesTosendRiesgo.newMessage('repetirRiesgo', senderName);
                     user = users.find(userValue => userValue.chatId == chatId);
@@ -215,6 +215,8 @@ function subFlow() {
         }
 
     } else if (user.state == 'repetirRiesgo') {
+        console.log("Entró a repetir");
+        
         if (repetir.find(valueRepetir => valueRepetir == input)) {
             message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(userValue => userValue.chatId == chatId);

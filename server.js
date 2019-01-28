@@ -175,7 +175,7 @@ function subFlow() {
                 categoriasRiesgo[8].find(function (response) { return utilities.isContain(input, response); })) {
                 message = messagesTosendRiesgo.newMessage('darGracias', senderName);
                 user = users.find(function (userValue) { return userValue.chatId == chatId; });
-                user.state = 'repetirRiesgo';
+                user.state = 'darGracias';
                 user.body = message;
                 utilities.functionWithCallBack(sendMessage(user, function (x) { }), 3000).then(function (res) {
                     message = messagesTosendRiesgo.newMessage('repetirRiesgo', senderName);
@@ -195,6 +195,7 @@ function subFlow() {
         }
     }
     else if (user.state == 'repetirRiesgo') {
+        console.log("Entró a repetir");
         if (repetir.find(function (valueRepetir) { return valueRepetir == input; })) {
             message = messagesTosendRiesgo.newMessage('saludoInicial', senderName);
             user = users.find(function (userValue) { return userValue.chatId == chatId; });
