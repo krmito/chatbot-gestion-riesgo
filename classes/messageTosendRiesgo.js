@@ -1,5 +1,5 @@
 "use strict";
-var messagesTosendRiesgo = {
+var messageTosendRiesgo = {
     newMessage: function (state, userName, dia, hora, x, objecto, correo) {
         var mensaje = '';
         switch (state) {

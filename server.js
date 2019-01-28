@@ -4,7 +4,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var request = require("request");
 var User_1 = require("./classes/User");
-var messagesTosendRiesgo = require("./classes/messagesTosendRiesgo");
+var messagesTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
 var app = express();
 var url = 'https://eu24.chat-api.com/instance23630/sendMessage?token=fhbjhwk1fvtfy2j4';
