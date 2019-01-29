@@ -13,20 +13,18 @@ export class acceso {
     static armaObjetos(tipo: string, cedula: number, callback: any): any {
         var formData = new FormData();
 
-
         formData.append("login", "mygov@nx.com");
         formData.append("password", "123456789");
-        console.log("Cuerpo: " + JSON.stringify(formData));
+        formData.append("type", "text/html");
+        console.log("FORM-DATA: " + JSON.stringify(formData));
 
-        this.request.post(
-            {
+        this.request.post({
                 "headers": { "content-type": "multipart/form-data" },
                 "url": this.servicio,
-                "body": JSON.stringify(formData)
+                "formData": JSON.stringify(formData)
             }, (error: any, response: any, body: any) => {
-
                 console.log("RESPONSE: " + JSON.stringify(response));
-                
+
                 if (!error && response.statusCode == 200) {
                     callback(body);
                 }
