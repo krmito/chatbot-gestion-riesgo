@@ -6,14 +6,41 @@ var acceso = /** @class */ (function () {
     }
     acceso.armaObjetos = function (tipo, cedula, callback) {
         var formData = new FormData();
-        /*         "headers": { "content-type": "multipart/form-data" },
-                "url": this.servicio,
-                "formData": JSON.stringify(formData) */
         formData.append("login", "mygov@nx.com");
         formData.append("password", "123456789");
         console.log("FORM-DATA: " + JSON.stringify(formData));
-        var r = this.request.post(this.servicio, formData);
-        console.log(JSON.stringify(r));
+        var options = {
+            method: "POST",
+            url: "https://qa-producto.nexura.com/api/registro/login",
+            port: 443,
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            formData: {
+                "login": "mygov@nx.com",
+                "password": "123456789"
+            }
+        };
+        /*         this.request.post({
+                        "headers": { "content-type": "multipart/form-data" },
+                        "url": this.servicio,
+                        "formData": JSON.stringify(formData)
+                    }, (error: any, response: any, body: any) => {
+                        console.log("RESPONSE: " + JSON.stringify(response));
+                        console.log("BODY: " + JSON.stringify(body));
+        
+                        if (!error && response.statusCode == 200) {
+                            callback(body);
+                        }
+                        else {
+                            console.log(error);
+                        }
+                    }); */
+        this.request(options, function (error, response, body) {
+            if (error)
+                console.log(error);
+            console.log(body);
+        });
     };
     acceso.servicio = "https://qa-producto.nexura.com/api/registro/login";
     acceso.cuerpo = {};
