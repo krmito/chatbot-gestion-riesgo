@@ -7,6 +7,7 @@ var acceso = /** @class */ (function () {
     }
     acceso.armaObjetos = function (tipo, cedula, callback) {
         var formData = new FormData();
+        var blob = new Blob();
         formData.append('items', new Blob([JSON.stringify({
                 login: "mygov@nx.com",
                 password: "123456789"
