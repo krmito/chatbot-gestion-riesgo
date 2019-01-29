@@ -8,7 +8,7 @@ var acceso = /** @class */ (function () {
         var formData = new FormData();
         formData.append("login", "mygov@nx.com");
         formData.append("password", "123456789");
-        /* formData.append("type", "text/html"); */
+        formData.append("host", "https://qa-producto.nexura.com/api/registro/login");
         console.log("FORM-DATA: " + JSON.stringify(formData));
         this.request.post({
             "headers": { "content-type": "application/json" },
