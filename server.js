@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var bodyParser = require("body-parser");
 var request = require("request");
 var User_1 = require("./classes/User");
-var consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
+var consultaLogin = require("./services/login");
 var app = require('express')();
 var messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
@@ -55,11 +55,12 @@ function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
         user = new User_1.User(phoneRE, messageToSendRE, 'saludoInicial');
         console.log(phoneRE);
         users.set(phoneRE, user);
-        sendMessage(user).then(function (res) {
-            console.log("Res: " + res);
+        utilities.functionWithCallBack(sendMessage(user).then(function (res) {
             if (res) {
                 siga = true;
             }
+        }), 3000).then(function (res) {
+            loguearse();
         });
     }
     else if (user.state == 'saludoInicial' && siga == true && constants.reporteRiesgo.find(function (valueSaludo1) { return utilities.isContain(messageRE, valueSaludo1); })) {
@@ -288,14 +289,13 @@ function descargaPdf(callback) {
     /*     return response;
      */ 
 }
-function consultarServicio(tipo, cedula) {
-    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, function (x) {
-        datos = x;
-    });
-}
 var server = app.listen(process.env.PORT, function () {
     var host = server.address().address;
     var port = server.address().port;
     console.log("El servidor se encuentra en el puerto " + port + " y el host es " + host);
 });
-login;
+function loguearse() {
+    consultaLogin.acceso.armaObjetos("", 0, function (x) {
+        datos = x;
+    });
+}

@@ -1,7 +1,7 @@
 import bodyParser = require('body-parser');
 import request = require('request');
 import { User } from "./classes/User";
-import consultaAfiliadoEPS = require("./services/consultaAfiliadoEPS");
+import consultaLogin = require("./services/login");
 
 let app = require('express')();
 let messageTosendRiesgo = require("./classes/messageTosendRiesgo");
@@ -67,14 +67,16 @@ function manageUsers(messageRE: string, phoneRE: string, userNameRE: string, mes
         console.log(phoneRE);
         
         users.set(phoneRE, user);
-        sendMessage(user).then(res => {
-            console.log("Res: " + res);
 
+        utilities.functionWithCallBack(sendMessage(user).then(res => {
             if (res) {
                 siga = true;
             }
-
+        }), 3000).then((res: any) => {
+            loguearse();
         });
+
+        
     } else if (user.state == 'saludoInicial' && siga == true && constants.reporteRiesgo.find((valueSaludo1: any) => utilities.isContain(messageRE, valueSaludo1))) {
         messageToSendRE = messageTosendRiesgo.newMessage('DescReporte', userNameRE);
         user.state = 'DescReporte';
@@ -322,12 +324,6 @@ function descargaPdf(callback: any) {
 /*     return response;
  */}
 
-function consultarServicio(tipo: string, cedula: number) {
-    consultaAfiliadoEPS.servicioAfiliadoEPS.armaObjetos(tipo, cedula, (x: any) => {
-        datos = x;
-    });
-}
-
 
 let server = app.listen(process.env.PORT, () => {
     let host = server.address().address;
@@ -335,4 +331,8 @@ let server = app.listen(process.env.PORT, () => {
     console.log("El servidor se encuentra en el puerto " + port + " y el host es " + host);
 });
 
-login
+function loguearse() {
+    consultaLogin.acceso.armaObjetos("", 0, (x: any) => {
+        datos = x;
+    });
+}
