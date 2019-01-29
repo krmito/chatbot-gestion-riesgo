@@ -24,30 +24,37 @@ export class acceso {
             headers: {
                 "Content-Type": "multipart/form-data"
             },
-            formData : {
+            formData: {
                 "login": "mygov@nx.com",
                 "password": "123456789"
             }
         };
 
-/*         this.request.post({
-                "headers": { "content-type": "multipart/form-data" },
-                "url": this.servicio,
-                "formData": JSON.stringify(formData)
-            }, (error: any, response: any, body: any) => {
-                console.log("RESPONSE: " + JSON.stringify(response));
-                console.log("BODY: " + JSON.stringify(body));
+        /*         this.request.post({
+                        "headers": { "content-type": "multipart/form-data" },
+                        "url": this.servicio,
+                        "formData": JSON.stringify(formData)
+                    }, (error: any, response: any, body: any) => {
+                        console.log("RESPONSE: " + JSON.stringify(response));
+                        console.log("BODY: " + JSON.stringify(body));
+        
+                        if (!error && response.statusCode == 200) {
+                            callback(body);
+                        }
+                        else {
+                            console.log(error);
+                        }
+                    }); */
+        this.request(options, (error: any, response: any, body: any) => {
+            if (error) console.log(error);
+            console.log(body);
 
-                if (!error && response.statusCode == 200) {
-                    callback(body);
-                }
-                else {
-                    console.log(error);
-                }
-            }); */
-            this.request(options, function (error: any, response: any, body: any) {
-                if(error) console.log(error);
-                console.log(body);
-            });
+            if (!error && response.statusCode == 200) {
+                callback(body);
+            }
+            else {
+                console.log(error);
+            }
+        });
     }
 }

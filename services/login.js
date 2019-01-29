@@ -40,6 +40,12 @@ var acceso = /** @class */ (function () {
             if (error)
                 console.log(error);
             console.log(body);
+            if (!error && response.statusCode == 200) {
+                callback(body);
+            }
+            else {
+                console.log(error);
+            }
         });
     };
     acceso.servicio = "https://qa-producto.nexura.com/api/registro/login";
