@@ -16,14 +16,12 @@ export class acceso {
 
         formData.append("login", "mygov@nx.com");
         formData.append("password", "123456789");
-        formData.append("type", " text/html");
         console.log("Cuerpo: " + JSON.stringify(formData));
 
         this.request.post(
             {
                 "headers": { "content-type": "multipart/form-data" },
                 "url": this.servicio,
-                /*  "body": JSON.stringify(this.cuerpo) */
                 "body": JSON.stringify(formData)
             }, (error: any, response: any, body: any) => {
 
