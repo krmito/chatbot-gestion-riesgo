@@ -18,26 +18,6 @@ export class acceso {
                 type: "text/html"
             }));
 
-/*         this.cuerpo = {
-
-            "method": "POST",
-            "header": [],
-            "body": {
-                "mode": "formdata",
-                "formdata": [
-                    {
-                        "key": "login",
-                        "value": "mygov@nx.com",
-                        "type": "text"
-                    },
-                    {
-                        "key": "password",
-                        "value": "123456789",
-                        "type": "text"
-                    }
-                ]
-            }
-        } */
         console.log("Cuerpo: " + JSON.stringify(this.cuerpo));
         this.request.post(
             {
