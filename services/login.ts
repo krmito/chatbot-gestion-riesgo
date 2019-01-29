@@ -15,11 +15,10 @@ export class acceso {
 
         formData.append("login", "mygov@nx.com");
         formData.append("password", "123456789");
-        formData.append("host", "https://qa-producto.nexura.com/api/registro/login");
         console.log("FORM-DATA: " + JSON.stringify(formData));
 
         this.request.post({
-                "headers": { "content-type": "application/json" },
+                "headers": {},
                 "url": this.servicio,
                 "formData": JSON.stringify(formData)
             }, (error: any, response: any, body: any) => {
