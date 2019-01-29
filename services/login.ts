@@ -15,13 +15,13 @@ export class acceso {
 
         formData.append("login", "mygov@nx.com");
         formData.append("password", "123456789");
-        formData.append("type", "text/html");
+        /* formData.append("type", "text/html"); */
         console.log("FORM-DATA: " + JSON.stringify(formData));
 
         this.request.post({
-                "headers": { "content-type": "multipart/form-data" },
+                /* "headers": { "content-type": "multipart/form-data" }, */
                 "url": this.servicio,
-                "body": JSON.stringify(formData)
+                "formData": JSON.stringify(formData)
             }, (error: any, response: any, body: any) => {
                 console.log("RESPONSE: " + JSON.stringify(response));
                 console.log("BODY: " + JSON.stringify(body));
