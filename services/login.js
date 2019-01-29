@@ -14,7 +14,7 @@ var acceso = /** @class */ (function () {
             "headers": { "content-type": "multipart/form-data" },
             "url": this.servicio,
             /*  "body": JSON.stringify(this.cuerpo) */
-            "body": JSON.stringify(formData),
+            "body": JSON.stringify(formData)
         }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 callback(body);
