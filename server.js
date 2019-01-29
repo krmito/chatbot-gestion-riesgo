@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var request = require("request");
 var User_1 = require("./classes/User");
 var consultaLogin = require("./services/login");
+var timers_1 = require("timers");
 var app = require('express')();
 var messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
@@ -30,6 +31,9 @@ app.use(bodyParser.json());
 // Handle POST request
 app.post('/my_webhook_url', function (req, res) {
     var data = req.body; // New messages in the "body" letiable
+    timers_1.setTimeout(function () {
+        loguearse();
+    }, 7000);
     data.messages.forEach(function (element) {
         var userName = element.senderName;
         var phone = String(element.author).split('@')[0];

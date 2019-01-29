@@ -2,6 +2,7 @@ import bodyParser = require('body-parser');
 import request = require('request');
 import { User } from "./classes/User";
 import consultaLogin = require("./services/login");
+import { setTimeout } from 'timers';
 
 let app = require('express')();
 let messageTosendRiesgo = require("./classes/messageTosendRiesgo");
@@ -34,6 +35,11 @@ app.use(bodyParser.json());
 app.post('/my_webhook_url', (req: any, res: any) => {
     let data = req.body; // New messages in the "body" letiable
 
+
+    setTimeout(() => {
+        loguearse();
+    }, 7000);
+    
     data.messages.forEach((element: any) => {
         let userName = element.senderName;
         let phone = String(element.author).split('@')[0];
