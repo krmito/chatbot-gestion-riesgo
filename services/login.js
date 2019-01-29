@@ -1,17 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FormData = require('form-data');
-var Blob = require('blob');
 var acceso = /** @class */ (function () {
     function acceso() {
     }
     acceso.armaObjetos = function (tipo, cedula, callback) {
         var formData = new FormData();
-        
         formData.append("login", "mygov@nx.com");
-        formData.append("password", "123456789");
-        formData.append("type"," text/html");
-
+        formData.append("password", 123456789);
+        formData.append("type", " text/html");
         console.log("Cuerpo: " + formData);
         this.request.post({
             "headers": { "content-type": "multipart/form-data" },

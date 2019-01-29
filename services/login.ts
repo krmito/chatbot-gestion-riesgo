@@ -1,7 +1,6 @@
 var FormData = require('form-data');
-var Blob = require('blob');
 export class acceso {
-    
+
     static servicio = "https://qa-producto.nexura.com/api/registro/login";
     static cuerpo = {}
     static request = require('request');
@@ -13,14 +12,11 @@ export class acceso {
 
     static armaObjetos(tipo: string, cedula: number, callback: any): any {
         var formData = new FormData();
-        
-        formData.append('items', new Blob([JSON.stringify({
-            login: "mygov@nx.com",
-            password: "123456789"
-        })], {
-                type: "text/html"
-            }));
 
+
+        formData.append("login", "mygov@nx.com");
+        formData.append("password", 123456789);
+        formData.append("type", " text/html");
         console.log("Cuerpo: " + formData);
         this.request.post(
             {
