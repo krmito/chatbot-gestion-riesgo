@@ -1,4 +1,6 @@
+var FormData = require('form-data');
 export class acceso {
+    
     static servicio = "https://qa-producto.nexura.com/api/registro/login";
     static cuerpo = {}
     static request = require('request');
