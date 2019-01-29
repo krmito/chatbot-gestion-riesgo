@@ -13,7 +13,7 @@ export class acceso {
 
     static armaObjetos(tipo: string, cedula: number, callback: any): any {
         var formData = new FormData();
-        var blob = new Blob();
+        
         formData.append('items', new Blob([JSON.stringify({
             login: "mygov@nx.com",
             password: "123456789"

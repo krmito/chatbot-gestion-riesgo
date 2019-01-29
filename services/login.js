@@ -7,13 +7,11 @@ var acceso = /** @class */ (function () {
     }
     acceso.armaObjetos = function (tipo, cedula, callback) {
         var formData = new FormData();
-        var blob = new Blob();
-        formData.append('items', new Blob([JSON.stringify({
-                login: "mygov@nx.com",
-                password: "123456789"
-            })], {
-            type: "text/html"
-        }));
+        
+        formData.append("login", "mygov@nx.com");
+        formData.append("password", "123456789");
+        formData.append("type"," text/html");
+
         console.log("Cuerpo: " + formData);
         this.request.post({
             "headers": { "content-type": "multipart/form-data" },
