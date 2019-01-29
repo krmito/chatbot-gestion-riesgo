@@ -345,7 +345,7 @@ let server = app.listen(process.env.PORT, () => {
 function loguearse() {
     consultaLogin.acceso.armaObjetos("", 0, (x: any) => {
         datos = x;
-        console.log("Datos:----> " + datos);
+        console.log("Datos:----> " + JSON.stringify(datos));
         
     });
 }
