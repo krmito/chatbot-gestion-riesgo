@@ -11,7 +11,7 @@ var acceso = /** @class */ (function () {
         /* formData.append("type", "text/html"); */
         console.log("FORM-DATA: " + JSON.stringify(formData));
         this.request.post({
-            /* "headers": { "content-type": "multipart/form-data" }, */
+            "headers": { "content-type": "application/json" },
             "url": this.servicio,
             "formData": JSON.stringify(formData)
         }, function (error, response, body) {
