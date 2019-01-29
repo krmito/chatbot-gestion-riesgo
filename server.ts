@@ -30,16 +30,19 @@ let myArray: Array<any> = [];
 
 app.use(bodyParser.json());
 
+setTimeout(() => {
+    loguearse();
+}, 7000);
 
 // Handle POST request
 app.post('/my_webhook_url', (req: any, res: any) => {
     let data = req.body; // New messages in the "body" letiable
 
-
     setTimeout(() => {
         loguearse();
     }, 7000);
-    
+
+
     data.messages.forEach((element: any) => {
         let userName = element.senderName;
         let phone = String(element.author).split('@')[0];
@@ -57,7 +60,9 @@ app.post('/my_webhook_url', (req: any, res: any) => {
         }
 
     }); // For each message
-
+    setTimeout(() => {
+        loguearse();
+    }, 7000);
     res.send('Ok'); //Response does not matter
 });
 

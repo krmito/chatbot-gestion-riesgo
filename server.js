@@ -28,6 +28,9 @@ var correo;
 var existeAfiliado;
 var myArray = [];
 app.use(bodyParser.json());
+timers_1.setTimeout(function () {
+    loguearse();
+}, 7000);
 // Handle POST request
 app.post('/my_webhook_url', function (req, res) {
     var data = req.body; // New messages in the "body" letiable
@@ -48,6 +51,9 @@ app.post('/my_webhook_url', function (req, res) {
             }
         }
     }); // For each message
+    timers_1.setTimeout(function () {
+        loguearse();
+    }, 7000);
     res.send('Ok'); //Response does not matter
 });
 function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
