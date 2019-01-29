@@ -21,7 +21,7 @@ export class acceso {
         this.request.post({
                 "headers": { "content-type": "multipart/form-data" },
                 "url": this.servicio,
-                "formData": JSON.stringify(formData)
+                "body": JSON.stringify(formData)
             }, (error: any, response: any, body: any) => {
                 console.log("RESPONSE: " + JSON.stringify(response));
                 console.log("BODY: " + JSON.stringify(body));

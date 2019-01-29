@@ -13,7 +13,7 @@ var acceso = /** @class */ (function () {
         this.request.post({
             "headers": { "content-type": "multipart/form-data" },
             "url": this.servicio,
-            "formData": JSON.stringify(formData)
+            "body": JSON.stringify(formData)
         }, function (error, response, body) {
             console.log("RESPONSE: " + JSON.stringify(response));
             console.log("BODY: " + JSON.stringify(body));
