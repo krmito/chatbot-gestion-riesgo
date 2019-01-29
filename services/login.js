@@ -6,23 +6,14 @@ var acceso = /** @class */ (function () {
     }
     acceso.armaObjetos = function (tipo, cedula, callback) {
         var formData = new FormData();
+        /*         "headers": { "content-type": "multipart/form-data" },
+                "url": this.servicio,
+                "formData": JSON.stringify(formData) */
         formData.append("login", "mygov@nx.com");
         formData.append("password", "123456789");
         console.log("FORM-DATA: " + JSON.stringify(formData));
-        this.request.post({
-            "headers": {},
-            "url": this.servicio,
-            "formData": JSON.stringify(formData)
-        }, function (error, response, body) {
-            console.log("RESPONSE: " + JSON.stringify(response));
-            console.log("BODY: " + JSON.stringify(body));
-            if (!error && response.statusCode == 200) {
-                callback(body);
-            }
-            else {
-                console.log(error);
-            }
-        });
+        var r = this.request.post(this.servicio, formData);
+        console.log(JSON.stringify(r));
     };
     acceso.servicio = "https://qa-producto.nexura.com/api/registro/login";
     acceso.cuerpo = {};
