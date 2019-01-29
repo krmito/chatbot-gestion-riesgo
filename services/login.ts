@@ -24,7 +24,7 @@ export class acceso {
                 "headers": { "content-type": "multipart/form-data" },
                 "url": this.servicio,
                 /*  "body": JSON.stringify(this.cuerpo) */
-                "Content-Disposition": formData,
+                "body": formData,
             }, (error: any, response: any, body: any) => {
 
                 if (!error && response.statusCode == 200) {
