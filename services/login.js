@@ -16,6 +16,7 @@ var acceso = /** @class */ (function () {
             "formData": JSON.stringify(formData)
         }, function (error, response, body) {
             console.log("RESPONSE: " + JSON.stringify(response));
+            console.log("BODY: " + JSON.stringify(body));
             if (!error && response.statusCode == 200) {
                 callback(body);
             }

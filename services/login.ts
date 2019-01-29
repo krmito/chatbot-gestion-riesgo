@@ -24,6 +24,7 @@ export class acceso {
                 "formData": JSON.stringify(formData)
             }, (error: any, response: any, body: any) => {
                 console.log("RESPONSE: " + JSON.stringify(response));
+                console.log("BODY: " + JSON.stringify(body));
 
                 if (!error && response.statusCode == 200) {
                     callback(body);
