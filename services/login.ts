@@ -1,4 +1,5 @@
 var FormData = require('form-data');
+var Blob = require('blob');
 export class acceso {
     
     static servicio = "https://qa-producto.nexura.com/api/registro/login";

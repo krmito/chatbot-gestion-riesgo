@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FormData = require('form-data');
+var Blob = require('blob');
 var acceso = /** @class */ (function () {
     function acceso() {
     }
