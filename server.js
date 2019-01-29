@@ -297,5 +297,6 @@ var server = app.listen(process.env.PORT, function () {
 function loguearse() {
     consultaLogin.acceso.armaObjetos("", 0, function (x) {
         datos = x;
+        console.log("Datos:----> " + datos);
     });
 }
