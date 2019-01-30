@@ -30,17 +30,11 @@ let myArray: Array<any> = [];
 
 app.use(bodyParser.json());
 
-setTimeout(() => {
-    loguearse();
-}, 7000);
+
 
 // Handle POST request
 app.post('/my_webhook_url', (req: any, res: any) => {
     let data = req.body; // New messages in the "body" letiable
-
-    setTimeout(() => {
-        loguearse();
-    }, 7000);
 
 
     data.messages.forEach((element: any) => {
@@ -60,9 +54,6 @@ app.post('/my_webhook_url', (req: any, res: any) => {
         }
 
     }); // For each message
-    setTimeout(() => {
-        loguearse();
-    }, 7000);
     res.send('Ok'); //Response does not matter
 });
 
@@ -139,6 +130,9 @@ function manageUsers(messageRE: string, phoneRE: string, userNameRE: string, mes
             messageToSendRE = messageTosendRiesgo.newMessage('darCategoria', userNameRE);
             user.state = 'darCategoria';
             user.body = messageToSendRE;
+            console.log(user.body);
+            
+            
             sendMessage(user).then(res => {
                 if (res) {
                     siga = true;

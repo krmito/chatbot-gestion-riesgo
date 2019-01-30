@@ -4,7 +4,6 @@ var bodyParser = require("body-parser");
 var request = require("request");
 var User_1 = require("./classes/User");
 var consultaLogin = require("./services/login");
-var timers_1 = require("timers");
 var app = require('express')();
 var messageTosendRiesgo = require("./classes/messageTosendRiesgo");
 var utilities = require("./classes/utilities");
@@ -28,15 +27,9 @@ var correo;
 var existeAfiliado;
 var myArray = [];
 app.use(bodyParser.json());
-timers_1.setTimeout(function () {
-    loguearse();
-}, 7000);
 // Handle POST request
 app.post('/my_webhook_url', function (req, res) {
     var data = req.body; // New messages in the "body" letiable
-    timers_1.setTimeout(function () {
-        loguearse();
-    }, 7000);
     data.messages.forEach(function (element) {
         var userName = element.senderName;
         var phone = String(element.author).split('@')[0];
@@ -51,9 +44,6 @@ app.post('/my_webhook_url', function (req, res) {
             }
         }
     }); // For each message
-    timers_1.setTimeout(function () {
-        loguearse();
-    }, 7000);
     res.send('Ok'); //Response does not matter
 });
 function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
@@ -120,6 +110,7 @@ function manageUsers(messageRE, phoneRE, userNameRE, messageToSendRE) {
             messageToSendRE = messageTosendRiesgo.newMessage('darCategoria', userNameRE);
             user.state = 'darCategoria';
             user.body = messageToSendRE;
+            console.log(user.body);
             sendMessage(user).then(function (res) {
                 if (res) {
                     siga = true;
